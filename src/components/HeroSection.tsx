@@ -21,23 +21,22 @@ const HeroSection = () => {
         <div className="max-w-4xl mx-auto space-y-6">
           <h1 className="text-5xl md:text-7xl font-bold leading-tight">
             <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Reseñas Gaming
+              Juega y Calla
             </span>
             <br />
-            <span className="text-foreground">de Calidad</span>
+            <span className="text-foreground">Antes de Comprar</span>
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
-            Descubre los mejores videojuegos a través de reseñas detalladas, 
-            análisis profundos y la opinión de una comunidad apasionada.
+            Análisis completos y honestos para que tomes la mejor decisión antes de comprar o probar un videojuego.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
             <Button variant="gaming" size="lg" className="text-lg px-8 py-3">
-              Explorar Reseñas
+              Ver Análisis
             </Button>
             <Button variant="accent" size="lg" className="text-lg px-8 py-3">
-              Últimos Análisis
+              Últimas Reviews
             </Button>
           </div>
 

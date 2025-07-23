@@ -3,66 +3,71 @@ import ReviewCard from "./ReviewCard";
 // Mock data para las reseñas destacadas
 const featuredReviews = [
   {
-    title: "Cyberpunk 2077: Phantom Liberty",
+    id: "cyberpunk-2077",
+    title: "Cyberpunk 2077",
     genre: "RPG/Acción",
-    rating: 5,
-    date: "15 Nov 2024",
-    author: "GameReviewer",
-    excerpt: "La expansión que Cyberpunk necesitaba. Una historia madura y gameplay refinado que eleva la experiencia a nuevas alturas.",
-    image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=300&fit=crop&crop=faces",
-    comments: 47,
-    featured: true
-  },
-  {
-    title: "Baldur's Gate 3",
-    genre: "RPG",
-    rating: 5,
-    date: "12 Nov 2024",
-    author: "RPGMaster",
-    excerpt: "Un RPG que redefine el género. Libertad narrativa, decisiones impactantes y un combate por turnos excepcional.",
-    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop&crop=faces",
+    rating: 4,
+    date: "15 Dic 2024",
+    author: "GameMaster",
+    excerpt: "Una experiencia cyberpunk inmersiva que finalmente cumple sus promesas tras las actualizaciones. Night City cobra vida con detalles impresionantes...",
+    image: "/placeholder.svg",
     comments: 89,
     featured: true
   },
   {
+    id: "the-witcher-3",
+    title: "The Witcher 3: Wild Hunt",
+    genre: "RPG",
+    rating: 5,
+    date: "10 Dic 2024",
+    author: "RPGExpert",
+    excerpt: "Una obra maestra que define el género RPG. Geralt regresa en una aventura épica llena de decisiones morales complejas y combates estratégicos...",
+    image: "/placeholder.svg",
+    comments: 156
+  },
+  {
+    id: "baldurs-gate-3",
+    title: "Baldur's Gate 3",
+    genre: "RPG Táctico",
+    rating: 5,
+    date: "5 Dic 2024",
+    author: "TacticalGamer",
+    excerpt: "El RPG táctico definitivo que combina narrativa profunda con combate estratégico. Cada decisión importa en esta aventura D&D...",
+    image: "/placeholder.svg",
+    comments: 203
+  },
+  {
+    id: "spider-man-2",
     title: "Spider-Man 2",
     genre: "Acción/Aventura",
     rating: 4,
-    date: "10 Nov 2024",
-    author: "ActionGamer",
-    excerpt: "Una secuela sólida que mejora la fórmula. El juego con dos Spider-Man abre nuevas posibilidades narrativas.",
-    image: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=400&h=300&fit=crop&crop=faces",
-    comments: 32
+    date: "1 Dic 2024",
+    author: "WebSlinger",
+    excerpt: "El dúo de Spider-Man ofrece una experiencia de superhéroes sin igual. Nueva York nunca se sintió tan viva y emocionante de explorar...",
+    image: "/placeholder.svg",
+    comments: 124
   },
   {
-    title: "Alan Wake 2",
-    genre: "Terror/Thriller",
-    rating: 4,
-    date: "8 Nov 2024",
-    author: "HorrorFan",
-    excerpt: "Un thriller psicológico que combina terror atmosférico con una narrativa innovadora. Remedy vuelve por todo lo alto.",
-    image: "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=400&h=300&fit=crop&crop=faces",
-    comments: 56
-  },
-  {
-    title: "Super Mario Bros. Wonder",
-    genre: "Plataformas",
-    rating: 5,
-    date: "5 Nov 2024",
-    author: "PlatformExpert",
-    excerpt: "Nintendo reinventa su fórmula clásica con ideas frescas y sorprendentes. Un plataformas que no deja de asombrar.",
-    image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=300&fit=crop&crop=faces",
-    comments: 73
-  },
-  {
+    id: "starfield",
     title: "Starfield",
     genre: "RPG/Espacial",
     rating: 3,
-    date: "3 Nov 2024",
-    author: "SpaceGamer",
-    excerpt: "Una exploración espacial ambiciosa que no termina de despegar. Buenos momentos opacados por decisiones de diseño cuestionables.",
-    image: "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=300&fit=crop&crop=faces",
-    comments: 124
+    date: "28 Nov 2024",
+    author: "SpaceExplorer",
+    excerpt: "Una ambiciosa aventura espacial con altibajos. Bethesda nos lleva a las estrellas con resultados mixtos pero momentos brillantes...",
+    image: "/placeholder.svg",
+    comments: 67
+  },
+  {
+    id: "alan-wake-2",
+    title: "Alan Wake 2",
+    genre: "Survival Horror",
+    rating: 4,
+    date: "25 Nov 2024",
+    author: "HorrorFan",
+    excerpt: "Remedy regresa con una secuela que redefine el survival horror. Una experiencia psicológica intensa que desafía la percepción...",
+    image: "/placeholder.svg",
+    comments: 91
   }
 ];
 
@@ -73,11 +78,11 @@ const FeaturedReviews = () => {
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4">
             <span className="bg-gradient-accent bg-clip-text text-transparent">
-              Reseñas Destacadas
+              Análisis Destacados
             </span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Las mejores reseñas de los juegos más esperados y populares del momento
+            Análisis completos para ayudarte a decidir antes de comprar
           </p>
         </div>
 
@@ -92,7 +97,7 @@ const FeaturedReviews = () => {
 
         <div className="text-center mt-12">
           <button className="bg-gradient-primary hover:shadow-glow-primary hover:scale-105 transition-all duration-300 text-primary-foreground font-semibold px-8 py-3 rounded-md">
-            Ver Todas las Reseñas
+            Ver Todos los Análisis
           </button>
         </div>
       </div>

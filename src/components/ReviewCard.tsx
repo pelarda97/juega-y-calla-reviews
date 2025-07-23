@@ -1,8 +1,10 @@
 import { Star, Calendar, User, MessageCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 interface ReviewCardProps {
+  id: string;
   title: string;
   genre: string;
   rating: number;
@@ -15,6 +17,7 @@ interface ReviewCardProps {
 }
 
 const ReviewCard = ({ 
+  id,
   title, 
   genre, 
   rating, 
@@ -25,6 +28,7 @@ const ReviewCard = ({
   comments,
   featured = false 
 }: ReviewCardProps) => {
+  const navigate = useNavigate();
   const renderStars = (rating: number) => {
     return [...Array(5)].map((_, i) => (
       <Star
@@ -110,8 +114,9 @@ const ReviewCard = ({
         <Button 
           variant="outline" 
           className="w-full group-hover:border-primary group-hover:text-primary transition-colors"
+          onClick={() => navigate(`/review/${id}`)}
         >
-          Leer Reseña Completa
+          Leer Análisis Completo
         </Button>
       </div>
     </article>
