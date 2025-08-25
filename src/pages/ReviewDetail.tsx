@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, Calendar, User, Clock, Gamepad2, BookOpen, Settings, Heart } from "lucide-react";
+import { ArrowLeft, Star, Calendar, User, Clock, Gamepad2, BookOpen, Settings, Heart, Images } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,7 +20,8 @@ const reviewsData = {
     gameplay: "",
     funciones: "",
     duracion: "",
-    valoracionPersonal: ""
+    valoracionPersonal: "",
+    imagenes: []
   },
   "clair-obscur-expedition-33": {
     title: "Clair Obscur: Expedition 33",
@@ -33,7 +34,8 @@ const reviewsData = {
     gameplay: "",
     funciones: "",
     duracion: "",
-    valoracionPersonal: ""
+    valoracionPersonal: "",
+    imagenes: []
   }
 };
 
@@ -65,7 +67,8 @@ const ReviewDetail = () => {
     { title: "Gameplay", content: review.gameplay, icon: Gamepad2 },
     { title: "Funciones", content: review.funciones, icon: Settings },
     { title: "Duración", content: review.duracion, icon: Clock },
-    { title: "Valoración Personal", content: review.valoracionPersonal, icon: Heart }
+    { title: "Valoración Personal", content: review.valoracionPersonal, icon: Heart },
+    { title: "Imágenes", content: review.imagenes, icon: Images, isGallery: true }
   ];
 
   return (
@@ -139,9 +142,32 @@ const ReviewDetail = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-muted-foreground whitespace-pre-line">
-                    {section.content}
-                  </div>
+                  {section.isGallery ? (
+                    <div className="text-muted-foreground">
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {Array.isArray(section.content) && section.content.length > 0 ? (
+                          section.content.map((image: string, imgIndex: number) => (
+                            <div key={imgIndex} className="aspect-video bg-muted rounded-lg overflow-hidden">
+                              <img 
+                                src={image} 
+                                alt={`${review.title} - Imagen ${imgIndex + 1}`}
+                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                              />
+                            </div>
+                          ))
+                        ) : (
+                          <div className="col-span-full text-center py-8">
+                            <Images className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
+                            <p className="text-muted-foreground">No hay imágenes disponibles</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-muted-foreground whitespace-pre-line">
+                      {section.content}
+                    </div>
+                  )}
                 </CardContent>
                 {index < sections.length - 1 && <Separator className="mx-6" />}
               </Card>
