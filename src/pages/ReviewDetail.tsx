@@ -9,31 +9,31 @@ import Footer from "@/components/Footer";
 
 // Mock data - en una app real vendría de una API
 const reviewsData = {
-  "cyberpunk-2077": {
-    title: "Cyberpunk 2077",
-    genre: "RPG/Acción",
+  "the-last-of-us-2": {
+    title: "The Last of Us Part II",
+    genre: "Acción/Aventura",
     rating: 4,
-    date: "15 Dic 2024",
-    author: "GameMaster",
+    date: "15 Ene 2024",
+    author: "Juega y Calla",
     image: "/placeholder.svg",
-    argumento: "Night City te espera en esta épica aventura cyberpunk donde encarnas a V, un mercenario en busca de un implante único que otorga la inmortalidad. La historia se entrelaza con la leyenda del rock Johnny Silverhand, interpretado magistralmente por Keanu Reeves. El argumento explora temas profundos como la identidad, la mortalidad y el precio del progreso tecnológico en una sociedad distópica.",
-    gameplay: "El gameplay combina elementos de RPG con acción en primera persona. Puedes personalizar tu estilo de juego eligiendo entre sigilo, hackeo o combate directo. El sistema de progresión permite especializar a V en diferentes áreas como NetRunner, Solo o Techie. Los diálogos múltiples afectan significativamente el desarrollo de la historia.",
-    funciones: "• Sistema de crafting avanzado para armas y ciberware\n• Múltiples finales basados en tus decisiones\n• Exploración libre de Night City\n• Sistema de reputación con diferentes facciones\n• Personalización completa del personaje\n• Modo foto integrado",
-    duracion: "La campaña principal dura aproximadamente 25-30 horas, pero completar todo el contenido secundario puede extenderse hasta 80-100 horas. Las misiones secundarias son especialmente ricas en narrativa y vale la pena explorarlas todas.",
-    valoracionPersonal: "Después de las mejoras post-lanzamiento, Cyberpunk 2077 se ha convertido en una experiencia realmente memorable. Night City es impresionante visualmente y la historia de V es cautivadora. Aunque aún tiene algunos bugs menores, la experiencia general es altamente recomendable para los fanáticos del género."
+    argumento: "",
+    gameplay: "",
+    funciones: "",
+    duracion: "",
+    valoracionPersonal: ""
   },
-  "the-witcher-3": {
-    title: "The Witcher 3: Wild Hunt",
+  "clair-obscur-expedition-33": {
+    title: "Clair Obscur: Expedition 33",
     genre: "RPG",
-    rating: 5,
-    date: "10 Dic 2024",
-    author: "RPGExpert",
+    rating: 4,
+    date: "10 Ene 2024",
+    author: "Juega y Calla",
     image: "/placeholder.svg",
-    argumento: "Geralt de Rivia regresa en su aventura más épica. Como cazador de monstruos, debes encontrar a Ciri, tu hija adoptiva, antes de que la Cacería Salvaje la capture. La narrativa es profundamente madura, explorando temas de paternidad, guerra y sacrificio en un mundo donde las decisiones morales no son simplemente blanco o negro.",
-    gameplay: "Combate táctico que requiere preparación: estudiar enemigos, crear pociones, y usar los signos de Geralt estratégicamente. El sistema de exploración es orgánico, con descubrimientos genuinos en cada rincón. Las misiones secundarias tienen la calidad narrativa de misiones principales.",
-    funciones: "• Mundo abierto masivo con tres regiones principales\n• Sistema de alquimia profundo\n• Gwent: juego de cartas integrado\n• Múltiples finales para personajes principales\n• DLCs que añaden 50+ horas de contenido\n• Sistema de mutaciones avanzado",
-    duracion: "Campaña principal: 50-60 horas. Con contenido secundario: 120-150 horas. Los DLCs añaden otras 40 horas de contenido premium. Un juego que puede mantenerte ocupado durante meses.",
-    valoracionPersonal: "Simplemente una obra maestra. The Witcher 3 establece el estándar de oro para los RPGs de mundo abierto. Cada quest cuenta una historia memorable, los personajes son inolvidables, y el mundo se siente vivo y auténtico. Imprescindible para cualquier gamer."
+    argumento: "",
+    gameplay: "",
+    funciones: "",
+    duracion: "",
+    valoracionPersonal: ""
   }
 };
 

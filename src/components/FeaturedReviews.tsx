@@ -3,71 +3,28 @@ import ReviewCard from "./ReviewCard";
 // Mock data para las reseñas destacadas
 const featuredReviews = [
   {
-    id: "cyberpunk-2077",
-    title: "Cyberpunk 2077",
-    genre: "RPG/Acción",
+    id: "the-last-of-us-2",
+    title: "The Last of Us Part II",
+    genre: "Acción/Aventura",
     rating: 4,
-    date: "15 Dic 2024",
-    author: "GameMaster",
-    excerpt: "Una experiencia cyberpunk inmersiva que finalmente cumple sus promesas tras las actualizaciones. Night City cobra vida con detalles impresionantes...",
+    date: "15 Ene 2024",
+    author: "Juega y Calla",
+    excerpt: "Una experiencia emocional intensa que desafía las expectativas y explora temas profundos sobre venganza y humanidad.",
     image: "/placeholder.svg",
-    comments: 89,
+    comments: 24,
     featured: true
   },
   {
-    id: "the-witcher-3",
-    title: "The Witcher 3: Wild Hunt",
+    id: "clair-obscur-expedition-33",
+    title: "Clair Obscur: Expedition 33",
     genre: "RPG",
-    rating: 5,
-    date: "10 Dic 2024",
-    author: "RPGExpert",
-    excerpt: "Una obra maestra que define el género RPG. Geralt regresa en una aventura épica llena de decisiones morales complejas y combates estratégicos...",
-    image: "/placeholder.svg",
-    comments: 156
-  },
-  {
-    id: "baldurs-gate-3",
-    title: "Baldur's Gate 3",
-    genre: "RPG Táctico",
-    rating: 5,
-    date: "5 Dic 2024",
-    author: "TacticalGamer",
-    excerpt: "El RPG táctico definitivo que combina narrativa profunda con combate estratégico. Cada decisión importa en esta aventura D&D...",
-    image: "/placeholder.svg",
-    comments: 203
-  },
-  {
-    id: "spider-man-2",
-    title: "Spider-Man 2",
-    genre: "Acción/Aventura",
     rating: 4,
-    date: "1 Dic 2024",
-    author: "WebSlinger",
-    excerpt: "El dúo de Spider-Man ofrece una experiencia de superhéroes sin igual. Nueva York nunca se sintió tan viva y emocionante de explorar...",
+    date: "10 Ene 2024",
+    author: "Juega y Calla",
+    excerpt: "Un RPG por turnos ambientado en un mundo surrealista con mecánicas innovadoras y una narrativa cautivadora.",
     image: "/placeholder.svg",
-    comments: 124
-  },
-  {
-    id: "starfield",
-    title: "Starfield",
-    genre: "RPG/Espacial",
-    rating: 3,
-    date: "28 Nov 2024",
-    author: "SpaceExplorer",
-    excerpt: "Una ambiciosa aventura espacial con altibajos. Bethesda nos lleva a las estrellas con resultados mixtos pero momentos brillantes...",
-    image: "/placeholder.svg",
-    comments: 67
-  },
-  {
-    id: "alan-wake-2",
-    title: "Alan Wake 2",
-    genre: "Survival Horror",
-    rating: 4,
-    date: "25 Nov 2024",
-    author: "HorrorFan",
-    excerpt: "Remedy regresa con una secuela que redefine el survival horror. Una experiencia psicológica intensa que desafía la percepción...",
-    image: "/placeholder.svg",
-    comments: 91
+    comments: 18,
+    featured: false
   }
 ];
 
@@ -96,9 +53,11 @@ const FeaturedReviews = () => {
         </div>
 
         <div className="text-center mt-12">
-          <button className="bg-gradient-primary hover:shadow-glow-primary hover:scale-105 transition-all duration-300 text-primary-foreground font-semibold px-8 py-3 rounded-md">
-            Ver Todos los Análisis
-          </button>
+          <a href="/reviews">
+            <button className="bg-gradient-primary hover:shadow-glow-primary hover:scale-105 transition-all duration-300 text-primary-foreground font-semibold px-8 py-3 rounded-md">
+              Ver Todos los Análisis
+            </button>
+          </a>
         </div>
       </div>
     </section>

@@ -20,17 +20,11 @@ const Header = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
-          <a href="#reviews" className="text-foreground hover:text-primary transition-colors">
+          <a href="/" className="text-foreground hover:text-primary transition-colors">
+            Inicio
+          </a>
+          <a href="/reviews" className="text-foreground hover:text-primary transition-colors">
             Reseñas
-          </a>
-          <a href="#genres" className="text-foreground hover:text-primary transition-colors">
-            Géneros
-          </a>
-          <a href="#latest" className="text-foreground hover:text-primary transition-colors">
-            Últimas
-          </a>
-          <a href="#top-rated" className="text-foreground hover:text-primary transition-colors">
-            Mejor Valoradas
           </a>
         </nav>
 
@@ -76,17 +70,11 @@ const Header = () => {
             </div>
             
             <nav className="space-y-2">
-              <a href="#reviews" className="block py-2 text-foreground hover:text-primary transition-colors">
+              <a href="/" className="block py-2 text-foreground hover:text-primary transition-colors">
+                Inicio
+              </a>
+              <a href="/reviews" className="block py-2 text-foreground hover:text-primary transition-colors">
                 Reseñas
-              </a>
-              <a href="#genres" className="block py-2 text-foreground hover:text-primary transition-colors">
-                Géneros
-              </a>
-              <a href="#latest" className="block py-2 text-foreground hover:text-primary transition-colors">
-                Últimas
-              </a>
-              <a href="#top-rated" className="block py-2 text-foreground hover:text-primary transition-colors">
-                Mejor Valoradas
               </a>
             </nav>
             
