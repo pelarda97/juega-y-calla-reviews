@@ -45,7 +45,7 @@ const HeroSection = () => {
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2 text-accent">
                 <Star className="h-6 w-6" />
-                <span className="text-2xl font-bold">500+</span>
+                <span className="text-2xl font-bold">2</span>
               </div>
               <span className="text-muted-foreground">Juegos Reseñados</span>
             </div>
@@ -53,17 +53,17 @@ const HeroSection = () => {
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2 text-primary">
                 <TrendingUp className="h-6 w-6" />
-                <span className="text-2xl font-bold">98%</span>
+                <span className="text-2xl font-bold">0</span>
               </div>
-              <span className="text-muted-foreground">Precisión en Reviews</span>
+              <span className="text-muted-foreground">Visitas a la Página</span>
             </div>
             
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2 text-accent">
                 <Users className="h-6 w-6" />
-                <span className="text-2xl font-bold">25K+</span>
+                <span className="text-2xl font-bold">0</span>
               </div>
-              <span className="text-muted-foreground">Gamers Activos</span>
+              <span className="text-muted-foreground">Gamers Registrados</span>
             </div>
           </div>
         </div>
