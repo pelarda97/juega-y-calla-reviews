@@ -26,6 +26,9 @@ const Header = () => {
           <a href="/reviews" className="text-foreground hover:text-primary transition-colors">
             Reseñas
           </a>
+          <a href="/recommendations" className="text-foreground hover:text-primary transition-colors">
+            Recomendaciones
+          </a>
         </nav>
 
         {/* Search and Login */}
@@ -75,6 +78,9 @@ const Header = () => {
               </a>
               <a href="/reviews" className="block py-2 text-foreground hover:text-primary transition-colors">
                 Reseñas
+              </a>
+              <a href="/recommendations" className="block py-2 text-foreground hover:text-primary transition-colors">
+                Recomendaciones
               </a>
             </nav>
             

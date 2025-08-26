@@ -16,6 +16,7 @@ const reviewsData = {
     date: "15 Ene 2024",
     author: "Juega y Calla",
     image: "/placeholder.svg",
+    introduccion: "",
     argumento: "",
     gameplay: "",
     funciones: "",
@@ -30,6 +31,7 @@ const reviewsData = {
     date: "10 Ene 2024",
     author: "Juega y Calla",
     image: "/placeholder.svg",
+    introduccion: "",
     argumento: "",
     gameplay: "",
     funciones: "",
@@ -63,6 +65,7 @@ const ReviewDetail = () => {
   };
 
   const sections = [
+    { title: "Introducción", content: review.introduccion, icon: BookOpen },
     { title: "Argumento", content: review.argumento, icon: BookOpen },
     { title: "Gameplay", content: review.gameplay, icon: Gamepad2 },
     { title: "Funciones", content: review.funciones, icon: Settings },
