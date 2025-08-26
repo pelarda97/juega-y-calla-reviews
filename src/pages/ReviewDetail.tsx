@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, Calendar, User, Clock, Gamepad2, BookOpen, Settings, Heart, Images, ThumbsUp, ThumbsDown, MessageCircle, Send } from "lucide-react";
+import { ArrowLeft, Star, Calendar, User, Clock, Gamepad2, BookOpen, Settings, Heart, Images, ThumbsUp, ThumbsDown, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -47,7 +46,6 @@ const ReviewDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [liked, setLiked] = useState<boolean | null>(null);
-  const [comment, setComment] = useState("");
   
   const review = reviewsData[id as keyof typeof reviewsData];
   
@@ -217,22 +215,20 @@ const ReviewDetail = () => {
                 </div>
 
                 {/* Comments Section */}
-                <div className="flex flex-col gap-4">
-                  <h4 className="font-semibold text-foreground text-center">Deja tu comentario</h4>
-                  <div className="space-y-3">
-                    <Textarea
-                      placeholder="Comparte tu opinión sobre esta reseña..."
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                      className="min-h-[100px] resize-none"
-                    />
+                <div className="flex flex-col items-center gap-4">
+                  <h4 className="font-semibold text-foreground">Comentarios</h4>
+                  <div className="text-center space-y-3">
+                    <p className="text-muted-foreground text-sm">
+                      Lee y comparte opiniones
+                    </p>
                     <Button 
-                      variant="gaming" 
-                      className="w-full flex items-center gap-2"
-                      disabled={!comment.trim()}
+                      variant="outline" 
+                      size="lg"
+                      onClick={() => navigate(`/review/${id}/comments`)}
+                      className="flex items-center gap-2"
                     >
-                      <Send className="h-4 w-4" />
-                      Enviar Comentario
+                      <MessageCircle className="h-5 w-5" />
+                      Ver Comentarios
                     </Button>
                   </div>
                 </div>
@@ -250,7 +246,7 @@ const ReviewDetail = () => {
                       onClick={() => navigate('/reviews')}
                       className="flex items-center gap-2"
                     >
-                      <MessageCircle className="h-5 w-5" />
+                      <Gamepad2 className="h-5 w-5" />
                       Ver Más Reviews
                     </Button>
                   </div>
