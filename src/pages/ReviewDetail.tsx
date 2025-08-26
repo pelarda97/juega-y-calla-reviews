@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, Calendar, User, Clock, Gamepad2, BookOpen, Settings, Heart, Images, ThumbsUp, ThumbsDown, MessageCircle } from "lucide-react";
+import { ArrowLeft, Star, Calendar, User, Clock, Gamepad2, BookOpen, Settings, Heart, Images, ThumbsUp, ThumbsDown, MessageCircle, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -67,7 +67,7 @@ const ReviewDetail = () => {
   };
 
   const sections = [
-    { title: "Introducción", content: review.introduccion, icon: BookOpen },
+    { title: "Introducción", content: review.introduccion, icon: FileText },
     { title: "Argumento", content: review.argumento, icon: BookOpen },
     { title: "Gameplay", content: review.gameplay, icon: Gamepad2 },
     { title: "Funciones", content: review.funciones, icon: Settings },
@@ -192,23 +192,23 @@ const ReviewDetail = () => {
                 {/* Like/Dislike Section */}
                 <div className="flex flex-col items-center gap-4">
                   <h4 className="font-semibold text-foreground">Valora esta reseña</h4>
-                  <div className="flex gap-4">
+                  <div className="flex flex-col sm:flex-row gap-3 w-full">
                     <Button
                       variant={liked === true ? "gaming" : "outline"}
-                      size="lg"
+                      size="sm"
                       onClick={() => setLiked(liked === true ? null : true)}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-2 flex-1"
                     >
-                      <ThumbsUp className="h-5 w-5" />
+                      <ThumbsUp className="h-4 w-4" />
                       Me gusta
                     </Button>
                     <Button
                       variant={liked === false ? "destructive" : "outline"}
-                      size="lg"
+                      size="sm"
                       onClick={() => setLiked(liked === false ? null : false)}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-2 flex-1"
                     >
-                      <ThumbsDown className="h-5 w-5" />
+                      <ThumbsDown className="h-4 w-4" />
                       No me gusta
                     </Button>
                   </div>
