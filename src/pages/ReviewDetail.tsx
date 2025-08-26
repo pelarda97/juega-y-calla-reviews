@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, Calendar, User, Clock, Gamepad2, BookOpen, Settings, Heart, Images } from "lucide-react";
+import { ArrowLeft, Star, Calendar, User, Clock, Gamepad2, BookOpen, Settings, Heart, Images, ThumbsUp, ThumbsDown, MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -44,6 +46,8 @@ const reviewsData = {
 const ReviewDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [liked, setLiked] = useState<boolean | null>(null);
+  const [comment, setComment] = useState("");
   
   const review = reviewsData[id as keyof typeof reviewsData];
   
@@ -178,23 +182,80 @@ const ReviewDetail = () => {
           })}
         </div>
 
-        {/* Call to Action */}
-        <div className="mt-12 text-center">
-          <Card className="border-border bg-gradient-to-r from-card/50 to-card">
+        {/* Interaction Section */}
+        <div className="mt-12">
+          <Card className="border-border">
             <CardContent className="p-8">
-              <h3 className="text-2xl font-bold text-foreground mb-4">
+              <h3 className="text-2xl font-bold text-foreground mb-6 text-center">
                 ¿Te gustó esta review?
               </h3>
-              <p className="text-muted-foreground mb-6">
-                Descubre más análisis detallados antes de tu próxima compra
-              </p>
-              <Button 
-                variant="gaming" 
-                size="lg"
-                onClick={() => navigate('/')}
-              >
-                Ver Más Reviews
-              </Button>
+              
+              <div className="grid md:grid-cols-3 gap-8">
+                {/* Like/Dislike Section */}
+                <div className="flex flex-col items-center gap-4">
+                  <h4 className="font-semibold text-foreground">Valora esta reseña</h4>
+                  <div className="flex gap-4">
+                    <Button
+                      variant={liked === true ? "gaming" : "outline"}
+                      size="lg"
+                      onClick={() => setLiked(liked === true ? null : true)}
+                      className="flex items-center gap-2"
+                    >
+                      <ThumbsUp className="h-5 w-5" />
+                      Me gusta
+                    </Button>
+                    <Button
+                      variant={liked === false ? "destructive" : "outline"}
+                      size="lg"
+                      onClick={() => setLiked(liked === false ? null : false)}
+                      className="flex items-center gap-2"
+                    >
+                      <ThumbsDown className="h-5 w-5" />
+                      No me gusta
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Comments Section */}
+                <div className="flex flex-col gap-4">
+                  <h4 className="font-semibold text-foreground text-center">Deja tu comentario</h4>
+                  <div className="space-y-3">
+                    <Textarea
+                      placeholder="Comparte tu opinión sobre esta reseña..."
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      className="min-h-[100px] resize-none"
+                    />
+                    <Button 
+                      variant="gaming" 
+                      className="w-full flex items-center gap-2"
+                      disabled={!comment.trim()}
+                    >
+                      <Send className="h-4 w-4" />
+                      Enviar Comentario
+                    </Button>
+                  </div>
+                </div>
+
+                {/* More Reviews Section */}
+                <div className="flex flex-col items-center gap-4">
+                  <h4 className="font-semibold text-foreground">Descubre más</h4>
+                  <div className="text-center space-y-3">
+                    <p className="text-muted-foreground text-sm">
+                      Explora más análisis detallados
+                    </p>
+                    <Button 
+                      variant="gaming" 
+                      size="lg"
+                      onClick={() => navigate('/reviews')}
+                      className="flex items-center gap-2"
+                    >
+                      <MessageCircle className="h-5 w-5" />
+                      Ver Más Reviews
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
