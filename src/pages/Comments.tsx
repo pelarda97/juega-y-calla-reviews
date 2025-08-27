@@ -1,208 +1,238 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, User, Calendar, MessageCircle, Send, Heart } from "lucide-react";
+import { ArrowLeft, MessageCircle, ThumbsUp, Calendar, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-
-// Mock data para comentarios
-const commentsData = {
-  "the-last-of-us-2": [
-    {
-      id: 1,
-      author: "PlayerOne",
-      content: "Excelente reseña! Me ayudó mucho a decidirme por el juego. La sección de gameplay está muy detallada.",
-      date: "2 días",
-      likes: 5
-    },
-    {
-      id: 2,
-      author: "GamerGirl23",
-      content: "Coincido totalmente con la valoración. El apartado emocional del juego es increíble.",
-      date: "1 semana",
-      likes: 3
-    },
-    {
-      id: 3,
-      author: "RetroFan",
-      content: "Me encanta cómo describes las mecánicas. ¿Tienes pensado hacer una reseña de la primera parte?",
-      date: "2 semanas",
-      likes: 7
-    }
-  ],
-  "clair-obscur-expedition-33": [
-    {
-      id: 1,
-      author: "RPGLover",
-      content: "Gran análisis de este RPG. Me ha convencido para probarlo.",
-      date: "3 días",
-      likes: 4
-    }
-  ]
-};
-
-const reviewTitles = {
-  "the-last-of-us-2": "The Last of Us Part II",
-  "clair-obscur-expedition-33": "Clair Obscur: Expedition 33"
-};
+import { useRealtimeComments } from "@/hooks/useRealtimeStats";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Comments = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [newComment, setNewComment] = useState("");
-  const [comments, setComments] = useState(commentsData[id as keyof typeof commentsData] || []);
+  const [authorName, setAuthorName] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const { toast } = useToast();
+  
+  const { comments, loading } = useRealtimeComments(id || '');
 
-  const reviewTitle = reviewTitles[id as keyof typeof reviewTitles] || "Reseña";
+  const handleSubmitComment = async () => {
+    if (!newComment.trim() || !authorName.trim()) {
+      toast({
+        title: "Error",
+        description: "Por favor completa todos los campos",
+        variant: "destructive"
+      });
+      return;
+    }
 
-  const handleSubmitComment = () => {
-    if (newComment.trim()) {
-      const comment = {
-        id: comments.length + 1,
-        author: "Tú",
-        content: newComment,
-        date: "Ahora",
-        likes: 0
-      };
-      setComments([comment, ...comments]);
+    setSubmitting(true);
+    try {
+      // Get review ID
+      const { data: reviewData } = await supabase
+        .from('reviews')
+        .select('id')
+        .eq('slug', id)
+        .single();
+
+      if (!reviewData) {
+        throw new Error('Review not found');
+      }
+
+      // Insert comment
+      const { error } = await supabase
+        .from('comments')
+        .insert({
+          review_id: reviewData.id,
+          author_name: authorName.trim(),
+          content: newComment.trim()
+        });
+
+      if (error) throw error;
+
       setNewComment("");
+      setAuthorName("");
+      toast({
+        title: "¡Comentario publicado!",
+        description: "Tu comentario ha sido añadido correctamente"
+      });
+    } catch (error) {
+      console.error('Error submitting comment:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo publicar el comentario. Inténtalo de nuevo.",
+        variant: "destructive"
+      });
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const getInitials = (name: string) => {
-    return name.split(' ').map(word => word[0]).join('').toUpperCase();
+    return name.split(' ').map(word => word.charAt(0)).join('').toUpperCase();
   };
+
+  // Get review title from the review titles map
+  const reviewTitles: { [key: string]: string } = {
+    "the-last-of-us-2": "The Last of Us Part II - Una obra maestra controversial",
+    "clair-obscur-expedition-33": "Clair Obscur: Expedition 33 - Un RPG prometedor"
+  };
+
+  const reviewTitle = reviewTitles[id || ""] || "Reseña";
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
       <main className="container mx-auto px-4 py-8">
-        {/* Back Button */}
-        <Button 
-          variant="ghost" 
-          onClick={() => navigate(-1)}
-          className="mb-6 hover:bg-primary/10"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Volver a la Reseña
-        </Button>
-
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-            Comentarios
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Reseña de: <span className="text-foreground font-semibold">{reviewTitle}</span>
-          </p>
+        <div className="flex items-center gap-4 mb-8">
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate(`/review/${id}`)}
+            className="hover:bg-primary/10"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Volver a la Reseña
+          </Button>
+          <div className="flex-1">
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+              Comentarios
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              {reviewTitle}
+            </p>
+          </div>
         </div>
 
-        {/* Write Comment Section */}
-        <Card className="mb-8 border-border">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-foreground">
-              <MessageCircle className="h-5 w-5 text-primary" />
-              Escribe tu comentario
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Textarea
-              placeholder="Comparte tu opinión sobre esta reseña..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              className="min-h-[120px] resize-none"
-            />
-            <div className="flex justify-end">
-              <Button 
-                variant="gaming" 
-                onClick={handleSubmitComment}
-                disabled={!newComment.trim()}
-                className="flex items-center gap-2"
-              >
-                <Send className="h-4 w-4" />
-                Publicar Comentario
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Comments List */}
-        <div className="space-y-6">
-          <div className="flex items-center gap-2 mb-6">
-            <h2 className="text-2xl font-bold text-foreground">
-              Comentarios ({comments.length})
-            </h2>
-          </div>
-
-          {comments.length === 0 ? (
-            <Card className="border-border">
-              <CardContent className="p-8 text-center">
-                <MessageCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">
-                  Aún no hay comentarios. ¡Sé el primero en compartir tu opinión!
-                </p>
+        <div className="grid gap-8 md:grid-cols-3">
+          {/* Comment Form */}
+          <div className="md:col-span-1">
+            <Card className="sticky top-4">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-foreground">Escribe un comentario</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <label htmlFor="authorName" className="block text-sm font-medium text-foreground mb-2">
+                    Tu nombre
+                  </label>
+                  <input
+                    id="authorName"
+                    type="text"
+                    placeholder="Escribe tu nombre..."
+                    value={authorName}
+                    onChange={(e) => setAuthorName(e.target.value)}
+                    className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="comment" className="block text-sm font-medium text-foreground mb-2">
+                    Tu comentario
+                  </label>
+                  <Textarea
+                    id="comment"
+                    placeholder="Comparte tu opinión sobre esta reseña..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    className="min-h-[100px] resize-none"
+                  />
+                </div>
+                <Button 
+                  onClick={handleSubmitComment}
+                  disabled={submitting}
+                  className="w-full"
+                  variant="gaming"
+                >
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  {submitting ? "Publicando..." : "Publicar Comentario"}
+                </Button>
               </CardContent>
             </Card>
-          ) : (
-            comments.map((comment, index) => (
-              <Card key={comment.id} className="border-border">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <Avatar className="h-10 w-10">
-                      <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-                        {getInitials(comment.author)}
-                      </AvatarFallback>
-                    </Avatar>
-                    
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="font-semibold text-foreground">{comment.author}</span>
-                        <Badge variant="secondary" className="text-xs">
-                          <Calendar className="h-3 w-3 mr-1" />
-                          {comment.date}
-                        </Badge>
-                      </div>
-                      
-                      <p className="text-muted-foreground mb-3 leading-relaxed">
-                        {comment.content}
-                      </p>
-                      
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-                          <Heart className="h-4 w-4 mr-1" />
-                          {comment.likes} me gusta
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
+          </div>
+
+          {/* Comments List */}
+          <div className="md:col-span-2">
+            <h2 className="text-xl font-semibold text-foreground mb-6">
+              Comentarios de la comunidad
+            </h2>
+            
+            {loading ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                <p className="mt-2 text-muted-foreground">Cargando comentarios...</p>
+              </div>
+            ) : comments.length === 0 ? (
+              <Card>
+                <CardContent className="text-center py-12">
+                  <MessageCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-foreground mb-2">
+                    No hay comentarios aún
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Sé el primero en compartir tu opinión sobre esta reseña
+                  </p>
                 </CardContent>
-                {index < comments.length - 1 && <Separator className="mx-6" />}
               </Card>
-            ))
-          )}
+            ) : (
+              <div className="space-y-4">
+                {comments.map((comment) => (
+                  <Card key={comment.id}>
+                    <CardContent className="pt-6">
+                      <div className="flex items-start gap-4">
+                        <Avatar>
+                          <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+                            {getInitials(comment.author_name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 space-y-2">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <User className="h-4 w-4" />
+                            <span className="font-medium">{comment.author_name}</span>
+                            <Calendar className="h-4 w-4 ml-2" />
+                            <span>{new Date(comment.created_at).toLocaleDateString('es-ES')}</span>
+                          </div>
+                          <p className="text-foreground leading-relaxed">
+                            {comment.content}
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                              <ThumbsUp className="h-4 w-4 mr-1" />
+                              {comment.likes_count || 0}
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Call to Action */}
-        <div className="mt-12 text-center">
-          <Card className="border-border bg-gradient-to-r from-card/50 to-card">
-            <CardContent className="p-8">
-              <h3 className="text-2xl font-bold text-foreground mb-4">
-                ¿Te resultó útil esta reseña?
+        <div className="mt-16">
+          <Card className="border-border bg-gradient-to-r from-primary/5 to-accent/5">
+            <CardContent className="text-center py-12">
+              <h3 className="text-xl font-bold text-foreground mb-4">
+                ¿Te gustan nuestras reseñas?
               </h3>
-              <p className="text-muted-foreground mb-6">
-                Explora más análisis detallados de otros juegos
+              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                Descubre más análisis detallados de los mejores juegos del momento
               </p>
               <Button 
                 variant="gaming" 
                 size="lg"
                 onClick={() => navigate('/reviews')}
+                className="font-semibold"
               >
-                Ver Más Reseñas
+                Ver Todas las Reviews
               </Button>
             </CardContent>
           </Card>
