@@ -14,7 +14,195 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      comments: {
+        Row: {
+          author_name: string
+          content: string
+          created_at: string
+          id: string
+          likes_count: number
+          review_id: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          author_name: string
+          content: string
+          created_at?: string
+          id?: string
+          likes_count?: number
+          review_id: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          author_name?: string
+          content?: string
+          created_at?: string
+          id?: string
+          likes_count?: number
+          review_id?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      page_views: {
+        Row: {
+          created_at: string
+          id: string
+          ip_address: string | null
+          page_type: string
+          review_id: string | null
+          user_agent: string | null
+          user_session: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          page_type: string
+          review_id?: string | null
+          user_agent?: string | null
+          user_session?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          page_type?: string
+          review_id?: string | null
+          user_agent?: string | null
+          user_session?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "page_views_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      review_likes: {
+        Row: {
+          created_at: string
+          id: string
+          is_like: boolean
+          review_id: string
+          user_session: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_like: boolean
+          review_id: string
+          user_session: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_like?: boolean
+          review_id?: string
+          user_session?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_likes_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reviews: {
+        Row: {
+          argumento: string | null
+          audio: string | null
+          author: string
+          comments_count: number
+          conclusion: string | null
+          contras: string[] | null
+          created_at: string
+          dislikes_count: number
+          funciones: string | null
+          game_title: string
+          gameplay: string | null
+          graficos: string | null
+          id: string
+          image_url: string | null
+          introduccion: string | null
+          likes_count: number
+          pros: string[] | null
+          publish_date: string
+          rating: number
+          slug: string
+          title: string
+          updated_at: string
+          views_count: number
+        }
+        Insert: {
+          argumento?: string | null
+          audio?: string | null
+          author?: string
+          comments_count?: number
+          conclusion?: string | null
+          contras?: string[] | null
+          created_at?: string
+          dislikes_count?: number
+          funciones?: string | null
+          game_title: string
+          gameplay?: string | null
+          graficos?: string | null
+          id?: string
+          image_url?: string | null
+          introduccion?: string | null
+          likes_count?: number
+          pros?: string[] | null
+          publish_date?: string
+          rating: number
+          slug: string
+          title: string
+          updated_at?: string
+          views_count?: number
+        }
+        Update: {
+          argumento?: string | null
+          audio?: string | null
+          author?: string
+          comments_count?: number
+          conclusion?: string | null
+          contras?: string[] | null
+          created_at?: string
+          dislikes_count?: number
+          funciones?: string | null
+          game_title?: string
+          gameplay?: string | null
+          graficos?: string | null
+          id?: string
+          image_url?: string | null
+          introduccion?: string | null
+          likes_count?: number
+          pros?: string[] | null
+          publish_date?: string
+          rating?: number
+          slug?: string
+          title?: string
+          updated_at?: string
+          views_count?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
