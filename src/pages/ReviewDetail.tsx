@@ -84,7 +84,7 @@ const ReviewDetail = () => {
           key={i}
           filled={isFullGamepad}
           halfFilled={isHalfGamepad}
-          className="h-5 w-5"
+          className="h-7 w-7"
         />
       );
     });
