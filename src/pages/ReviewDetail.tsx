@@ -72,15 +72,31 @@ const ReviewDetail = () => {
     fetchReview();
   }, [id, recordPageView]);
 
-  const renderStars = (rating: number) => {
-    return [...Array(5)].map((_, i) => (
-      <Star
-        key={i}
-        className={`h-5 w-5 ${
-          i < Math.floor(rating) ? "text-accent fill-accent" : "text-muted-foreground"
-        }`}
-      />
-    ));
+  const renderGamepads = (rating: number) => {
+    return [...Array(5)].map((_, i) => {
+      const currentValue = i + 1;
+      const isFullGamepad = rating >= currentValue;
+      const isHalfGamepad = rating >= currentValue - 0.5 && rating < currentValue;
+      
+      return (
+        <div key={i} className="relative">
+          <Gamepad2
+            className={`h-5 w-5 ${
+              isFullGamepad 
+                ? "text-accent fill-accent" 
+                : isHalfGamepad 
+                  ? "text-accent fill-accent/50" 
+                  : "text-muted-foreground"
+            }`}
+          />
+          {isHalfGamepad && (
+            <div className="absolute inset-0 overflow-hidden w-1/2">
+              <Gamepad2 className="h-5 w-5 text-accent fill-accent" />
+            </div>
+          )}
+        </div>
+      );
+    });
   };
 
   const getInitials = (name: string) => {
@@ -161,15 +177,15 @@ const ReviewDetail = () => {
             <div className="p-6">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                 <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="secondary">Reseña</Badge>
-                    <div className="flex items-center gap-1">
-                      {renderStars(review.rating)}
-                      <span className="text-sm font-semibold ml-1 text-accent">
-                        {review.rating}/10
-                      </span>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="secondary">Reseña</Badge>
+                      <div className="flex items-center gap-1">
+                        {renderGamepads(review.rating)}
+                        <span className="text-sm font-semibold ml-1 text-accent">
+                          {review.rating}/5
+                        </span>
+                      </div>
                     </div>
-                  </div>
                   <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
                     {review.title}
                   </h1>
