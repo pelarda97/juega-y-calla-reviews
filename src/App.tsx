@@ -8,6 +8,7 @@ import Reviews from "./pages/Reviews";
 import ReviewDetail from "./pages/ReviewDetail";
 import Comments from "./pages/Comments";
 import Recommendations from "./pages/Recommendations";
+import Quiz from "./pages/Quiz";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/review/:id" element={<ReviewDetail />} />
           <Route path="/review/:id/comments" element={<Comments />} />
           <Route path="/recommendations" element={<Recommendations />} />
+          <Route path="/quiz" element={<Quiz />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

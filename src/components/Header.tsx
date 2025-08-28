@@ -26,7 +26,7 @@ const Header = () => {
           <a href="/reviews" className="text-foreground hover:text-primary transition-colors">
             Reseñas
           </a>
-          <a href="/recommendations" className="text-foreground hover:text-primary transition-colors">
+          <a href="/quiz" className="text-foreground hover:text-primary transition-colors">
             Recomendaciones
           </a>
         </nav>
@@ -79,7 +79,7 @@ const Header = () => {
               <a href="/reviews" className="block py-2 text-foreground hover:text-primary transition-colors">
                 Reseñas
               </a>
-              <a href="/recommendations" className="block py-2 text-foreground hover:text-primary transition-colors">
+              <a href="/quiz" className="block py-2 text-foreground hover:text-primary transition-colors">
                 Recomendaciones
               </a>
             </nav>
