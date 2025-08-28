@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import GamepadIcon from "@/components/GamepadIcon";
 import { useRealtimeStats } from "@/hooks/useRealtimeStats";
 import { useLikeDislike } from "@/hooks/useLikeDislike";
 import { usePageViews } from "@/hooks/useRealtimeStats";
@@ -79,22 +80,12 @@ const ReviewDetail = () => {
       const isHalfGamepad = rating >= currentValue - 0.5 && rating < currentValue;
       
       return (
-        <div key={i} className="relative">
-          <Gamepad2
-            className={`h-5 w-5 ${
-              isFullGamepad 
-                ? "text-accent fill-accent" 
-                : isHalfGamepad 
-                  ? "text-accent fill-accent/50" 
-                  : "text-muted-foreground"
-            }`}
-          />
-          {isHalfGamepad && (
-            <div className="absolute inset-0 overflow-hidden w-1/2">
-              <Gamepad2 className="h-5 w-5 text-accent fill-accent" />
-            </div>
-          )}
-        </div>
+        <GamepadIcon
+          key={i}
+          filled={isFullGamepad}
+          halfFilled={isHalfGamepad}
+          className="h-5 w-5"
+        />
       );
     });
   };
