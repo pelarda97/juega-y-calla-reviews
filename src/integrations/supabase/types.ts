@@ -135,12 +135,14 @@ export type Database = {
           contras: string[] | null
           created_at: string
           dislikes_count: number
+          duracion: string | null
           funciones: string | null
           game_title: string
           gameplay: string | null
           graficos: string | null
           id: string
           image_url: string | null
+          imagenes: string[] | null
           introduccion: string | null
           likes_count: number
           pros: string[] | null
@@ -149,6 +151,7 @@ export type Database = {
           slug: string
           title: string
           updated_at: string
+          valoracion_personal: string | null
           views_count: number
         }
         Insert: {
@@ -160,12 +163,14 @@ export type Database = {
           contras?: string[] | null
           created_at?: string
           dislikes_count?: number
+          duracion?: string | null
           funciones?: string | null
           game_title: string
           gameplay?: string | null
           graficos?: string | null
           id?: string
           image_url?: string | null
+          imagenes?: string[] | null
           introduccion?: string | null
           likes_count?: number
           pros?: string[] | null
@@ -174,6 +179,7 @@ export type Database = {
           slug: string
           title: string
           updated_at?: string
+          valoracion_personal?: string | null
           views_count?: number
         }
         Update: {
@@ -185,12 +191,14 @@ export type Database = {
           contras?: string[] | null
           created_at?: string
           dislikes_count?: number
+          duracion?: string | null
           funciones?: string | null
           game_title?: string
           gameplay?: string | null
           graficos?: string | null
           id?: string
           image_url?: string | null
+          imagenes?: string[] | null
           introduccion?: string | null
           likes_count?: number
           pros?: string[] | null
@@ -199,6 +207,7 @@ export type Database = {
           slug?: string
           title?: string
           updated_at?: string
+          valoracion_personal?: string | null
           views_count?: number
         }
         Relationships: []

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, Calendar, User, Clock, Gamepad2, BookOpen, Settings, Heart, Images, ThumbsUp, ThumbsDown, MessageCircle, FileText } from "lucide-react";
+import { ArrowLeft, Star, Calendar, User, Clock, Gamepad2, BookOpen, Settings, ThumbsUp, ThumbsDown, MessageCircle, FileText, Timer, Heart, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -54,11 +54,9 @@ const ReviewDetail = () => {
             argumento: data.argumento,
             gameplay: data.gameplay,
             funciones: data.funciones,
-            graficos: data.graficos,
-            audio: data.audio,
-            conclusion: data.conclusion,
-            pros: data.pros || [],
-            contras: data.contras || []
+            duracion: data.duracion,
+            valoracion_personal: data.valoracion_personal,
+            imagenes: data.imagenes || []
           });
           
           // Record page view
@@ -130,9 +128,8 @@ const ReviewDetail = () => {
     { title: "Argumento", content: review.argumento, icon: BookOpen },
     { title: "Gameplay", content: review.gameplay, icon: Gamepad2 },
     { title: "Funciones", content: review.funciones, icon: Settings },
-    { title: "Gráficos", content: review.graficos, icon: Images },
-    { title: "Audio", content: review.audio, icon: Heart },
-    { title: "Conclusión", content: review.conclusion, icon: Clock }
+    { title: "Duración", content: review.duracion, icon: Timer },
+    { title: "Valoración Personal", content: review.valoracion_personal, icon: Heart }
   ];
 
   return (
@@ -219,46 +216,31 @@ const ReviewDetail = () => {
           })}
         </div>
 
-        {/* Pros and Cons */}
-        <div className="grid md:grid-cols-2 gap-6 mt-8">
-          <Card className="border-border">
+        {/* Image Gallery */}
+        {review.imagenes && review.imagenes.length > 0 && (
+          <Card className="border-border mt-8">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-green-600">
-                <ThumbsUp className="h-5 w-5" />
-                Pros
+              <CardTitle className="flex items-center gap-2 text-foreground">
+                <Camera className="h-5 w-5 text-primary" />
+                Galería de Imágenes
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2">
-                {review.pros.map((pro: string, index: number) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                    <span className="text-muted-foreground">{pro}</span>
-                  </li>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {review.imagenes.map((imagen: string, index: number) => (
+                  <div key={index} className="relative group overflow-hidden rounded-lg">
+                    <img 
+                      src={imagen} 
+                      alt={`Captura del juego ${index + 1}`}
+                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300"></div>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </CardContent>
           </Card>
-
-          <Card className="border-border">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-red-600">
-                <ThumbsDown className="h-5 w-5" />
-                Contras
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2">
-                {review.contras.map((contra: string, index: number) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
-                    <span className="text-muted-foreground">{contra}</span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
+        )}
 
         {/* Interaction Section */}
         <div className="mt-12">
