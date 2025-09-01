@@ -1,11 +1,16 @@
 import { useState } from "react";
-import { Gamepad2, User, Search, Menu, X } from "lucide-react";
+import { Gamepad2, Search, Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
@@ -26,12 +31,36 @@ const Header = () => {
           <a href="/reviews" className="text-foreground hover:text-primary transition-colors">
             Reseñas
           </a>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="text-foreground hover:text-primary">
+                Géneros
+                <ChevronDown className="ml-1 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>Shooter</DropdownMenuItem>
+              <DropdownMenuItem>RPG</DropdownMenuItem>
+              <DropdownMenuItem>Acción</DropdownMenuItem>
+              <DropdownMenuItem>Aventura</DropdownMenuItem>
+              <DropdownMenuItem>Estrategia</DropdownMenuItem>
+              <DropdownMenuItem>Simulación</DropdownMenuItem>
+              <DropdownMenuItem>Deportes</DropdownMenuItem>
+              <DropdownMenuItem>Racing</DropdownMenuItem>
+              <DropdownMenuItem>Plataformas</DropdownMenuItem>
+              <DropdownMenuItem>Terror</DropdownMenuItem>
+              <DropdownMenuItem>Puzzle</DropdownMenuItem>
+              <DropdownMenuItem>Indie</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <a href="/quiz" className="text-foreground hover:text-primary transition-colors">
             Recomendaciones
           </a>
         </nav>
 
-        {/* Search and Login */}
+        {/* Search */}
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex items-center gap-2">
             <Search className="h-4 w-4 text-muted-foreground" />
@@ -40,16 +69,6 @@ const Header = () => {
               className="w-48 bg-secondary border-border"
             />
           </div>
-          
-          <Button 
-            variant="gaming" 
-            size="sm"
-            onClick={() => setIsLoginOpen(true)}
-            className="hidden sm:flex"
-          >
-            <User className="h-4 w-4" />
-            Iniciar Sesión
-          </Button>
 
           {/* Mobile Menu Button */}
           <Button
@@ -79,15 +98,36 @@ const Header = () => {
               <a href="/reviews" className="block py-2 text-foreground hover:text-primary transition-colors">
                 Reseñas
               </a>
+              
+              <div className="py-2">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="w-full justify-start p-0 text-foreground hover:text-primary">
+                      Géneros
+                      <ChevronDown className="ml-1 h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem>Shooter</DropdownMenuItem>
+                    <DropdownMenuItem>RPG</DropdownMenuItem>
+                    <DropdownMenuItem>Acción</DropdownMenuItem>
+                    <DropdownMenuItem>Aventura</DropdownMenuItem>
+                    <DropdownMenuItem>Estrategia</DropdownMenuItem>
+                    <DropdownMenuItem>Simulación</DropdownMenuItem>
+                    <DropdownMenuItem>Deportes</DropdownMenuItem>
+                    <DropdownMenuItem>Racing</DropdownMenuItem>
+                    <DropdownMenuItem>Plataformas</DropdownMenuItem>
+                    <DropdownMenuItem>Terror</DropdownMenuItem>
+                    <DropdownMenuItem>Puzzle</DropdownMenuItem>
+                    <DropdownMenuItem>Indie</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              
               <a href="/quiz" className="block py-2 text-foreground hover:text-primary transition-colors">
                 Recomendaciones
               </a>
             </nav>
-            
-            <Button variant="gaming" className="w-full mt-4">
-              <User className="h-4 w-4" />
-              Iniciar Sesión
-            </Button>
           </div>
         </div>
       )}

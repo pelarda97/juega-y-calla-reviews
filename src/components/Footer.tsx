@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <footer className="bg-background border-t border-border">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
@@ -55,14 +55,11 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Community */}
+          {/* Contact */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-foreground">Comunidad</h3>
+            <h3 className="text-lg font-semibold text-foreground">Contacto</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Únete al Discord</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Foro de Discusión</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Colaboradores</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Contacto</a></li>
+              <li><a href="mailto:contacto@example.com" className="text-muted-foreground hover:text-primary transition-colors">Email de contacto</a></li>
             </ul>
           </div>
         </div>
