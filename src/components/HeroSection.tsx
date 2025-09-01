@@ -23,8 +23,6 @@ const HeroSection = () => {
             <span className="bg-gradient-primary bg-clip-text text-transparent">
               Juega y Calla
             </span>
-            <br />
-            <span className="text-foreground">Antes de Comprar</span>
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
