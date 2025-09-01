@@ -1,4 +1,5 @@
-import { Gamepad2, Github, Twitter, Youtube, Mail } from "lucide-react";
+import { Github, Twitter, Youtube, Mail } from "lucide-react";
+import ElectricGamepadLogo from "./ElectricGamepadLogo";
 
 const Footer = () => {
   return (
@@ -8,9 +9,9 @@ const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <Gamepad2 className="h-8 w-8 text-primary" />
+              <ElectricGamepadLogo size={32} />
               <span className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                GameReviews
+                Juega y Calla
               </span>
             </div>
             <p className="text-muted-foreground">
@@ -66,7 +67,7 @@ const Footer = () => {
 
         <div className="border-t border-border mt-8 pt-8 flex flex-col md:flex-row items-center justify-between">
           <p className="text-muted-foreground text-sm">
-            © 2024 GameReviews. Todos los derechos reservados.
+            © 2024 Juega y Calla. Todos los derechos reservados.
           </p>
           <div className="flex items-center gap-6 mt-4 md:mt-0">
             <a href="#" className="text-muted-foreground hover:text-primary text-sm transition-colors">

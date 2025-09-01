@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Gamepad2, Search, Menu, X, ChevronDown } from "lucide-react";
+import { Search, Menu, X, ChevronDown } from "lucide-react";
+import ElectricGamepadLogo from "./ElectricGamepadLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,7 +18,7 @@ const Header = () => {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <Gamepad2 className="h-8 w-8 text-primary" />
+          <ElectricGamepadLogo size={32} />
           <span className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
             Juega y Calla
           </span>
