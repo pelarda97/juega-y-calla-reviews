@@ -100,35 +100,47 @@ const ElectricGamepadLogo: React.FC<ElectricGamepadLogoProps> = ({
           </filter>
         </defs>
         
-        {/* Main gamepad shape */}
+        {/* Main gamepad shape - más reconocible */}
         <path
-          d="M8 16a8 8 0 0 0-8 8c0 1.5 1.2 2.7 2.7 2.7h2.6l2.7-2.7v-2.7a5.3 5.3 0 0 1 5.3-5.3h5.4a5.3 5.3 0 0 1 5.3 5.3v2.7l2.7 2.7h2.6c1.5 0 2.7-1.2 2.7-2.7a8 8 0 0 0-8-8H8z"
+          d="M8 15a6 6 0 0 0-6 6c0 1.1.9 2 2 2h2.5l1.5-1.5v-1.5a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1.5l1.5 1.5H24c1.1 0 2-.9 2-2a6 6 0 0 0-6-6H8z"
           fill="url(#gamepadGradient)"
           stroke="hsl(var(--primary))"
-          strokeWidth="1.5"
+          strokeWidth="1"
           filter="url(#glow)"
           className="animate-[pulse_3s_ease-in-out_infinite]"
         />
         
-        {/* D-pad */}
+        {/* Shoulder buttons/triggers */}
+        <rect x="6" y="13" width="3" height="1.5" rx="0.5" fill="hsl(var(--primary))" opacity="0.8" />
+        <rect x="23" y="13" width="3" height="1.5" rx="0.5" fill="hsl(var(--primary))" opacity="0.8" />
+        
+        {/* D-pad más definido */}
         <g fill="white" className="drop-shadow-sm">
-          <rect x="10.5" y="17.5" width="1.5" height="4" rx="0.3" />
-          <rect x="9" y="19" width="4" height="1.5" rx="0.3" />
+          <rect x="10" y="17" width="1.2" height="3.5" rx="0.2" />
+          <rect x="8.9" y="18.1" width="3.5" height="1.2" rx="0.2" />
         </g>
         
-        {/* Action buttons */}
+        {/* Action buttons más grandes y definidos */}
         <g fill="white" className="drop-shadow-sm">
-          <circle cx="21" cy="17.5" r="1" />
-          <circle cx="24" cy="20" r="1" />
-          <circle cx="18" cy="20" r="1" />
-          <circle cx="21" cy="22.5" r="1" />
+          <circle cx="20.5" cy="17" r="0.8" />
+          <circle cx="22.5" cy="19" r="0.8" />
+          <circle cx="18.5" cy="19" r="0.8" />
+          <circle cx="20.5" cy="21" r="0.8" />
         </g>
         
-        {/* Analog sticks with electric effect */}
-        <g fill="hsl(var(--accent))" className="drop-shadow-sm">
-          <circle cx="13" cy="24" r="1.8" stroke="hsl(var(--primary))" strokeWidth="0.5" />
-          <circle cx="19" cy="25.5" r="1.8" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+        {/* Analog sticks más prominentes */}
+        <g className="drop-shadow-sm">
+          <circle cx="12.5" cy="22.5" r="1.5" fill="hsl(var(--accent))" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+          <circle cx="12.5" cy="22.5" r="0.8" fill="white" opacity="0.3" />
+          
+          <circle cx="19.5" cy="23.5" r="1.5" fill="hsl(var(--accent))" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+          <circle cx="19.5" cy="23.5" r="0.8" fill="white" opacity="0.3" />
         </g>
+        
+        {/* Centro del gamepad para más detalle */}
+        <rect x="14" y="15.5" width="4" height="1" rx="0.5" fill="hsl(var(--primary))" opacity="0.6" />
+        <circle cx="15" cy="16" r="0.3" fill="white" opacity="0.8" />
+        <circle cx="17" cy="16" r="0.3" fill="white" opacity="0.8" />
       </svg>
     </div>
   );
