@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, Calendar, User, Clock, Gamepad2, BookOpen, Settings, ThumbsUp, ThumbsDown, MessageCircle, FileText, Timer, Heart, Camera } from "lucide-react";
+import { ArrowLeft, Star, Calendar, User, Clock, Gamepad2, BookOpen, Settings, ThumbsUp, ThumbsDown, MessageCircle, FileText, Timer, Heart, Camera, AlertTriangle, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GamepadIcon from "@/components/GamepadIcon";
@@ -18,6 +19,7 @@ const ReviewDetail = () => {
   const navigate = useNavigate();
   const [review, setReview] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [openSpoilers, setOpenSpoilers] = useState<{ [key: string]: boolean }>({});
   
   const { stats } = useRealtimeStats(id || '');
   const { userVote, handleVote, loading: voteLoading } = useLikeDislike(id || '');
@@ -205,6 +207,49 @@ const ReviewDetail = () => {
         <div className="grid gap-6">
           {sections.map((section, index) => {
             const IconComponent = section.icon;
+            const isSpoilerSection = section.title === "Argumento" || section.title === "Valoración Personal";
+            
+            if (isSpoilerSection) {
+              return (
+                <Card key={section.title} className="border-border">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-foreground">
+                      <IconComponent className="h-5 w-5 text-primary" />
+                      {section.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Collapsible 
+                      open={openSpoilers[section.title]} 
+                      onOpenChange={(open) => setOpenSpoilers(prev => ({ ...prev, [section.title]: open }))}
+                    >
+                      <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                          <span className="font-semibold text-amber-800 dark:text-amber-200">¡Advertencia de Spoilers!</span>
+                        </div>
+                        <p className="text-amber-700 dark:text-amber-300 text-sm mb-3">
+                          Esta sección contiene spoilers importantes de la trama. Haz clic para mostrar el contenido solo si ya has jugado el juego.
+                        </p>
+                        <CollapsibleTrigger asChild>
+                          <Button variant="outline" size="sm" className="flex items-center gap-2">
+                            <ChevronDown className={`h-4 w-4 transition-transform ${openSpoilers[section.title] ? 'rotate-180' : ''}`} />
+                            {openSpoilers[section.title] ? 'Ocultar Spoilers' : 'Mostrar Contenido (Spoilers)'}
+                          </Button>
+                        </CollapsibleTrigger>
+                      </div>
+                      
+                      <CollapsibleContent className="space-y-4">
+                        <div className="text-muted-foreground whitespace-pre-line">
+                          {section.content}
+                        </div>
+                      </CollapsibleContent>
+                    </Collapsible>
+                  </CardContent>
+                </Card>
+              );
+            }
+            
             return (
               <Card key={section.title} className="border-border">
                 <CardHeader>
