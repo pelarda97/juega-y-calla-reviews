@@ -223,21 +223,21 @@ const ReviewDetail = () => {
                       open={openSpoilers[section.title]} 
                       onOpenChange={(open) => setOpenSpoilers(prev => ({ ...prev, [section.title]: open }))}
                     >
-                      <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                          <span className="font-semibold text-amber-800 dark:text-amber-200">¡Advertencia de Spoilers!</span>
-                        </div>
-                        <p className="text-amber-700 dark:text-amber-300 text-sm mb-3">
-                          Esta sección contiene spoilers importantes de la trama. Haz clic para mostrar el contenido solo si ya has jugado el juego.
-                        </p>
-                        <CollapsibleTrigger asChild>
-                          <Button variant="outline" size="sm" className="flex items-center gap-2">
-                            <ChevronDown className={`h-4 w-4 transition-transform ${openSpoilers[section.title] ? 'rotate-180' : ''}`} />
-                            {openSpoilers[section.title] ? 'Ocultar Spoilers' : 'Mostrar Contenido (Spoilers)'}
-                          </Button>
-                        </CollapsibleTrigger>
-                      </div>
+                       <div className="bg-muted/30 border border-muted rounded-lg p-3 mb-4">
+                         <div className="flex items-center gap-2 mb-2">
+                           <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+                           <span className="text-sm font-medium text-muted-foreground">Contenido con spoilers</span>
+                         </div>
+                         <p className="text-muted-foreground text-xs mb-3">
+                           Esta sección contiene detalles de la trama.
+                         </p>
+                         <CollapsibleTrigger asChild>
+                           <Button variant="ghost" size="sm" className="text-xs h-7 px-2 text-muted-foreground hover:text-foreground">
+                             <ChevronDown className={`h-3 w-3 mr-1 transition-transform ${openSpoilers[section.title] ? 'rotate-180' : ''}`} />
+                             {openSpoilers[section.title] ? 'Ocultar' : 'Mostrar'}
+                           </Button>
+                         </CollapsibleTrigger>
+                       </div>
                       
                       <CollapsibleContent className="space-y-4">
                         <div className="text-muted-foreground whitespace-pre-line">

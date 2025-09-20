@@ -1,4 +1,4 @@
-import { Github, Twitter, Youtube, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import ElectricGamepadLogo from "./ElectricGamepadLogo";
 
 const Footer = () => {
@@ -19,16 +19,7 @@ const Footer = () => {
               Análisis honestos de una comunidad apasionada.
             </p>
             <div className="flex items-center gap-4">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Youtube className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Github className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="mailto:juegaycalla.reviews@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
                 <Mail className="h-5 w-5" />
               </a>
             </div>
@@ -60,7 +51,7 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-foreground">Contacto</h3>
             <ul className="space-y-2">
-              <li><a href="mailto:contacto@example.com" className="text-muted-foreground hover:text-primary transition-colors">Email de contacto</a></li>
+              <li><a href="mailto:juegaycalla.reviews@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">juegaycalla.reviews@gmail.com</a></li>
             </ul>
           </div>
         </div>
