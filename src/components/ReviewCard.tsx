@@ -1,7 +1,8 @@
-import { Star, Calendar, User, MessageCircle } from "lucide-react";
+import { Calendar, User, MessageCircle, ThumbsUp, ThumbsDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import GamepadIcon from "@/components/GamepadIcon";
 
 interface ReviewCardProps {
   id: string;
@@ -13,6 +14,8 @@ interface ReviewCardProps {
   excerpt: string;
   image: string;
   comments: number;
+  likes?: number;
+  dislikes?: number;
   featured?: boolean;
 }
 
@@ -26,16 +29,17 @@ const ReviewCard = ({
   excerpt, 
   image, 
   comments,
+  likes = 0,
+  dislikes = 0,
   featured = false 
 }: ReviewCardProps) => {
   const navigate = useNavigate();
-  const renderStars = (rating: number) => {
+  const renderGamepads = (rating: number) => {
     return [...Array(5)].map((_, i) => (
-      <Star
+      <GamepadIcon
         key={i}
-        className={`h-4 w-4 ${
-          i < rating ? "text-accent fill-accent" : "text-muted-foreground"
-        }`}
+        filled={i < rating}
+        className="h-4 w-4"
       />
     ));
   };
@@ -74,7 +78,7 @@ const ReviewCard = ({
               {genre}
             </Badge>
             <div className="flex items-center gap-1">
-              {renderStars(rating)}
+              {renderGamepads(rating)}
               <span className="text-sm font-semibold ml-1 text-accent">
                 {rating}.0
               </span>
@@ -92,21 +96,35 @@ const ReviewCard = ({
         </p>
 
         {/* Meta */}
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1">
-              <User className="h-3 w-3" />
-              <span>{author}</span>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1">
+                <User className="h-3 w-3" />
+                <span>{author}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Calendar className="h-3 w-3" />
+                <span>{date}</span>
+              </div>
             </div>
+            
             <div className="flex items-center gap-1">
-              <Calendar className="h-3 w-3" />
-              <span>{date}</span>
+              <MessageCircle className="h-3 w-3" />
+              <span>0</span>
             </div>
           </div>
           
-          <div className="flex items-center gap-1">
-            <MessageCircle className="h-3 w-3" />
-            <span>{comments}</span>
+          {/* Likes/Dislikes */}
+          <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <ThumbsUp className="h-3 w-3" />
+              <span>{likes}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <ThumbsDown className="h-3 w-3" />
+              <span>{dislikes}</span>
+            </div>
           </div>
         </div>
 
