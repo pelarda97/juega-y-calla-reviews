@@ -128,24 +128,19 @@ export type Database = {
       reviews: {
         Row: {
           argumento: string | null
-          audio: string | null
           author: string
           comments_count: number
-          conclusion: string | null
-          contras: string[] | null
           created_at: string
           dislikes_count: number
           duracion: string | null
           funciones: string | null
           game_title: string
           gameplay: string | null
-          graficos: string | null
           id: string
           image_url: string | null
           imagenes: string[] | null
           introduccion: string | null
           likes_count: number
-          pros: string[] | null
           publish_date: string
           rating: number
           slug: string
@@ -156,24 +151,19 @@ export type Database = {
         }
         Insert: {
           argumento?: string | null
-          audio?: string | null
           author?: string
           comments_count?: number
-          conclusion?: string | null
-          contras?: string[] | null
           created_at?: string
           dislikes_count?: number
           duracion?: string | null
           funciones?: string | null
           game_title: string
           gameplay?: string | null
-          graficos?: string | null
           id?: string
           image_url?: string | null
           imagenes?: string[] | null
           introduccion?: string | null
           likes_count?: number
-          pros?: string[] | null
           publish_date?: string
           rating: number
           slug: string
@@ -184,24 +174,19 @@ export type Database = {
         }
         Update: {
           argumento?: string | null
-          audio?: string | null
           author?: string
           comments_count?: number
-          conclusion?: string | null
-          contras?: string[] | null
           created_at?: string
           dislikes_count?: number
           duracion?: string | null
           funciones?: string | null
           game_title?: string
           gameplay?: string | null
-          graficos?: string | null
           id?: string
           image_url?: string | null
           imagenes?: string[] | null
           introduccion?: string | null
           likes_count?: number
-          pros?: string[] | null
           publish_date?: string
           rating?: number
           slug?: string
