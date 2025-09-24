@@ -210,6 +210,11 @@ const ReviewDetail = () => {
             const isSpoilerSection = section.title === "Argumento" || section.title === "Valoración Personal";
             
             if (isSpoilerSection) {
+              // Dividir el contenido en dos partes: texto inicial y spoilers
+              const contentParts = section.content ? section.content.split('\n\n') : [];
+              const initialText = contentParts.slice(0, 1).join('\n\n'); // Primer párrafo
+              const spoilerText = contentParts.slice(1).join('\n\n'); // Resto del contenido
+              
               return (
                 <Card key={section.title} className="border-border">
                   <CardHeader>
@@ -219,32 +224,50 @@ const ReviewDetail = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <Collapsible 
-                      open={openSpoilers[section.title]} 
-                      onOpenChange={(open) => setOpenSpoilers(prev => ({ ...prev, [section.title]: open }))}
-                    >
-                       <div className="bg-muted/30 border border-muted rounded-lg p-3 mb-4">
-                         <div className="flex items-center gap-2 mb-2">
-                           <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-                           <span className="text-sm font-medium text-muted-foreground">Contenido con spoilers</span>
-                         </div>
-                         <p className="text-muted-foreground text-xs mb-3">
-                           Esta sección contiene detalles de la trama.
-                         </p>
-                         <CollapsibleTrigger asChild>
-                           <Button variant="ghost" size="sm" className="text-xs h-7 px-2 text-muted-foreground hover:text-foreground">
-                             <ChevronDown className={`h-3 w-3 mr-1 transition-transform ${openSpoilers[section.title] ? 'rotate-180' : ''}`} />
-                             {openSpoilers[section.title] ? 'Ocultar' : 'Mostrar'}
-                           </Button>
-                         </CollapsibleTrigger>
-                       </div>
-                      
-                      <CollapsibleContent className="space-y-4">
-                        <div className="text-muted-foreground whitespace-pre-line">
-                          {section.content}
+                    {/* Texto inicial sin spoilers */}
+                    {initialText && (
+                      <div className="text-muted-foreground whitespace-pre-line mb-6">
+                        {initialText}
+                      </div>
+                    )}
+                    
+                    {/* Sección de spoilers */}
+                    {spoilerText && (
+                      <Collapsible 
+                        open={openSpoilers[section.title]} 
+                        onOpenChange={(open) => setOpenSpoilers(prev => ({ ...prev, [section.title]: open }))}
+                      >
+                        <div className="bg-muted/30 border border-muted rounded-lg p-3 mb-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm font-medium text-muted-foreground">Contenido con spoilers</span>
+                          </div>
+                          <p className="text-muted-foreground text-xs mb-3">
+                            Esta sección contiene detalles de la trama.
+                          </p>
+                          <CollapsibleTrigger asChild>
+                            <Button variant="ghost" size="sm" className="text-xs h-7 px-2 text-muted-foreground hover:text-foreground">
+                              <ChevronDown className={`h-3 w-3 mr-1 transition-transform ${openSpoilers[section.title] ? 'rotate-180' : ''}`} />
+                              {openSpoilers[section.title] ? 'Ocultar spoilers' : 'Mostrar spoilers'}
+                            </Button>
+                          </CollapsibleTrigger>
                         </div>
-                      </CollapsibleContent>
-                    </Collapsible>
+                        
+                        <CollapsibleContent className="space-y-4">
+                          <div className="text-muted-foreground whitespace-pre-line">
+                            {spoilerText}
+                          </div>
+                          
+                          {/* Aviso persistente de spoilers cuando está abierto */}
+                          <div className="bg-muted/20 border border-muted rounded-lg p-2 mt-4">
+                            <div className="flex items-center gap-2">
+                              <AlertTriangle className="h-3 w-3 text-muted-foreground" />
+                              <span className="text-xs text-muted-foreground">Contenido con spoilers mostrado</span>
+                            </div>
+                          </div>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    )}
                   </CardContent>
                 </Card>
               );
