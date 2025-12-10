@@ -1,0 +1,38 @@
+{
+  "slug": "nombre-del-juego-en-minusculas-con-guiones",
+  "title": "Título de la Reseña (Nombre del Juego)",
+  "game_title": "Nombre Completo del Juego",
+  "rating": 4.5,
+  "author": "Juega y Calla",
+  "publish_date": "2024-12-01",
+  "image_url": "/placeholder.svg",
+  "genre": "Género Principal (ej: RPG, Acción/Aventura, Estrategia, etc.)",
+  
+  "introduccion": "SECCIÓN 1: INTRODUCCIÓN\n\nEscribe aquí una introducción general del juego. Presenta el título, el estudio desarrollador, la plataforma y el contexto de lanzamiento.\n\nPuedes hablar de las expectativas iniciales, el hype previo al lanzamiento o cualquier información relevante que prepare al lector para la reseña.\n\nEsta sección NO debe contener spoilers.",
+  
+  "argumento": "SECCIÓN 2: ARGUMENTO\n\n=== PARTE VISIBLE (SIN SPOILERS) ===\nEscribe aquí la introducción de la trama SIN revelar detalles importantes. Habla del contexto inicial, el protagonista y la premisa básica.\n\nPuedes escribir varios párrafos aquí. Todo lo que esté ANTES del separador se verá siempre.\n\n--- A PARTIR DE AQUÍ: SPOILERS ---\n\n=== PARTE OCULTA (CON SPOILERS) ===\nAhora sí, detalla la trama completa. Esta parte estará oculta detrás del botón 'Mostrar spoilers'.\n\nPuedes hablar de giros argumentales, revelaciones importantes, el desarrollo de personajes y el desenlace.\n\nRecuerda: TODO lo que escribas DESPUÉS del separador '--- A PARTIR DE AQUÍ: SPOILERS ---' se ocultará automáticamente.",
+  
+  "gameplay": "SECCIÓN 3: GAMEPLAY\n\nDescribe aquí las mecánicas principales del juego:\n- Sistema de combate\n- Controles y manejo\n- Dificultad\n- Curva de aprendizaje\n- Sistemas de progresión (niveles, habilidades, equipamiento)\n\n¿Cómo se siente jugar a este título? ¿Es fluido? ¿Tiene problemas técnicos?\n\nEsta sección es donde explicas la experiencia jugable del día a día.",
+  
+  "funciones": "SECCIÓN 4: FUNCIONES ESPECIALES\n\nAquí detalla características únicas o destacables del juego:\n- Modos de juego (historia, multijugador, cooperativo)\n- Sistemas especiales (crafteo, construcción, personalización)\n- Características innovadoras\n- Rejugabilidad y contenido post-game\n- DLCs o expansiones disponibles\n\nTodo lo que haga especial a este juego más allá del gameplay básico.",
+  
+  "duracion": "SECCIÓN 5: DURACIÓN\n\nIndica cuánto tiempo lleva completar el juego:\n- Historia principal: X horas\n- Completar al 100%: Y horas\n- Contenido secundario\n\n¿Vale la pena el precio por las horas de juego que ofrece?\n\nTambién puedes mencionar si tiene contenido endgame o si es un juego para jugar \"forever\" (como juegos de servicio).",
+  
+  "valoracion_personal": "SECCIÓN 6: VALORACIÓN PERSONAL\n\n=== PARTE VISIBLE (SIN SPOILERS) ===\nComienza con tu opinión general sin spoilers. Habla de tus impresiones globales, a quién le recomendarías el juego y por qué.\n\nPuedes escribir varios párrafos con tu análisis objetivo.\n\n--- A PARTIR DE AQUÍ: SPOILERS ---\n\n=== PARTE OCULTA (OPCIONAL - CON SPOILERS) ===\nSi necesitas mencionar elementos específicos que requieran spoilers para justificar tu valoración, hazlo aquí.\n\nPuedes hablar de momentos específicos, decisiones narrativas, plot twists que te gustaron o disgustaron.\n\nFINALMENTE: Incluye PROS y CONTRAS claros al final.",
+  
+  "imagenes": [
+    "/placeholder.svg",
+    "/placeholder.svg",
+    "/placeholder.svg"
+  ],
+  
+  "INSTRUCCIONES": {
+    "slug": "IMPORTANTE: Debe ser único y en minúsculas con guiones. Ejemplo: 'the-last-of-us-2' o 'clair-obscur-expedition-33'",
+    "rating": "Puntuación de 0 a 5. Puede tener decimales: 3.5, 4.5, etc.",
+    "publish_date": "Formato: YYYY-MM-DD (Año-Mes-Día)",
+    "genre": "Usado para filtros. Ejemplos: RPG, Acción/Aventura, Shooter, Plataformas, Estrategia, Puzzle, Terror, Deportes",
+    "argumento_y_valoracion": "Estas dos secciones usan el sistema de spoilers. El contenido ANTES del texto '--- A PARTIR DE AQUÍ: SPOILERS ---' se muestra siempre. El contenido DESPUÉS se oculta detrás del botón.",
+    "saltos_de_linea": "Usa '\\n\\n' (doble salto) entre párrafos para mejor formato visual",
+    "imagenes": "Array de URLs. Puedes poner rutas locales (/images/juego1.jpg) o URLs externas. Sube las imágenes a Supabase Storage después"
+  }
+}

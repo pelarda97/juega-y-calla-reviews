@@ -45,7 +45,7 @@ const Footer = () => {
 
         <div className="border-t border-border mt-8 pt-8 text-center">
           <p className="text-muted-foreground text-sm">
-            © 2024 Juega y Calla. Todos los derechos reservados.
+            © 2025 Juega Y Calla. Todos los derechos reservados.
           </p>
         </div>
       </div>

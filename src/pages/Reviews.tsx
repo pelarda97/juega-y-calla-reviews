@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Filter, Calendar, Star, TrendingUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -7,38 +7,84 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import { mockReviews, USE_MOCK_DATA } from "@/data/mockReviews";
 
 const Reviews = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("date");
   const [genreFilter, setGenreFilter] = useState("all");
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [genres, setGenres] = useState<string[]>([]);
 
-  const reviews = [
-    {
-      id: "the-last-of-us-2",
-      title: "The Last of Us Part II",
-      genre: "Acción/Aventura",
-      rating: 4,
-      date: "2024-01-15",
-      author: "Juega y Calla",
-      excerpt: "Una experiencia emocional intensa que desafía las expectativas y explora temas profundos sobre venganza y humanidad.",
-      image: "/placeholder.svg",
-      comments: 24,
-      featured: true
-    },
-    {
-      id: "clair-obscur-expedition-33",
-      title: "Clair Obscur: Expedition 33",
-      genre: "RPG",
-      rating: 4,
-      date: "2024-01-10",
-      author: "Juega y Calla",
-      excerpt: "Un RPG por turnos ambientado en un mundo surrealista con mecánicas innovadoras y una narrativa cautivadora.",
-      image: "/placeholder.svg",
-      comments: 18,
-      featured: false
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
+  const fetchReviews = async () => {
+    try {
+      setLoading(true);
+      
+      // Si USE_MOCK_DATA está activado, usar datos locales
+      if (USE_MOCK_DATA) {
+        const reviewsWithExcerpt = mockReviews.map(review => ({
+          id: review.slug,
+          title: review.title,
+          genre: review.genre || "Sin género",
+          rating: review.rating,
+          date: review.publish_date,
+          author: review.author,
+          excerpt: review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "",
+          image: review.image_url || "/placeholder.svg",
+          comments: review.comments_count || 0,
+          featured: false
+        }));
+        
+        setReviews(reviewsWithExcerpt);
+        
+        // Extraer géneros únicos
+        const uniqueGenres = [...new Set(mockReviews.map(r => r.genre).filter(Boolean))];
+        setGenres(uniqueGenres as string[]);
+        setLoading(false);
+        return;
+      }
+      
+      // Si no, intentar cargar desde Supabase
+      const { data, error } = await supabase
+        .from("reviews")
+        .select("*")
+        .order("publish_date", { ascending: false });
+
+      if (error) throw error;
+
+      if (data) {
+        // Extraer los primeros 150 caracteres de argumento como excerpt
+        const reviewsWithExcerpt = data.map(review => ({
+          id: review.slug,
+          title: review.title,
+          genre: review.genre || "Sin género",
+          rating: review.rating,
+          date: review.publish_date,
+          author: review.author,
+          excerpt: review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "",
+          image: review.image_url || "/placeholder.svg",
+          comments: review.comments_count || 0,
+          featured: false
+        }));
+        
+        setReviews(reviewsWithExcerpt);
+
+        // Extraer géneros únicos para el filtro
+        const uniqueGenres = [...new Set(data.map(r => r.genre).filter(Boolean))];
+        setGenres(uniqueGenres as string[]);
+      }
+    } catch (error) {
+      console.error("Error al cargar reseñas:", error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   const filteredReviews = reviews.filter(review => {
     const matchesSearch = review.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -80,19 +126,23 @@ const Reviews = () => {
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
               <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border">
-                <div className="text-2xl font-bold text-accent">2</div>
+                <div className="text-2xl font-bold text-accent">{reviews.length}</div>
                 <div className="text-sm text-muted-foreground">Reseñas Totales</div>
               </div>
               <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border">
-                <div className="text-2xl font-bold text-accent">2</div>
+                <div className="text-2xl font-bold text-accent">{genres.length}</div>
                 <div className="text-sm text-muted-foreground">Géneros</div>
               </div>
               <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border">
-                <div className="text-2xl font-bold text-accent">4.0</div>
+                <div className="text-2xl font-bold text-accent">
+                  {reviews.length > 0 ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1) : "0.0"}
+                </div>
                 <div className="text-sm text-muted-foreground">Puntuación Media</div>
               </div>
               <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border">
-                <div className="text-2xl font-bold text-accent">42</div>
+                <div className="text-2xl font-bold text-accent">
+                  {reviews.reduce((sum, r) => sum + r.comments, 0)}
+                </div>
                 <div className="text-sm text-muted-foreground">Comentarios</div>
               </div>
             </div>
@@ -128,8 +178,11 @@ const Reviews = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todos los géneros</SelectItem>
-                    <SelectItem value="acción">Acción/Aventura</SelectItem>
-                    <SelectItem value="rpg">RPG</SelectItem>
+                    {genres.map((genre) => (
+                      <SelectItem key={genre} value={genre.toLowerCase()}>
+                        {genre}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -213,7 +266,12 @@ const Reviews = () => {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            {sortedReviews.length > 0 ? (
+            {loading ? (
+              <div className="text-center py-16">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto"></div>
+                <p className="text-muted-foreground mt-4">Cargando reseñas...</p>
+              </div>
+            ) : sortedReviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {sortedReviews.map((review) => (
                   <ReviewCard key={review.id} {...review} />

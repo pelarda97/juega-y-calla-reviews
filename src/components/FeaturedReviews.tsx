@@ -1,34 +1,92 @@
+import { useEffect, useState } from "react";
 import ReviewCard from "./ReviewCard";
-
-// Mock data para las reseñas destacadas
-const featuredReviews = [
-  {
-    id: "the-last-of-us-2",
-    title: "The Last of Us Part II",
-    genre: "Acción/Aventura",
-    rating: 4,
-    date: "15 Ene 2024",
-    author: "Juega y Calla",
-    excerpt: "Una experiencia emocional intensa que desafía las expectativas y explora temas profundos sobre venganza y humanidad.",
-    image: "/placeholder.svg",
-    comments: 24,
-    featured: true
-  },
-  {
-    id: "clair-obscur-expedition-33",
-    title: "Clair Obscur: Expedition 33",
-    genre: "RPG",
-    rating: 4,
-    date: "10 Ene 2024",
-    author: "Juega y Calla",
-    excerpt: "Un RPG por turnos ambientado en un mundo surrealista con mecánicas innovadoras y una narrativa cautivadora.",
-    image: "/placeholder.svg",
-    comments: 18,
-    featured: false
-  }
-];
+import { supabase } from "@/integrations/supabase/client";
+import { mockReviews, USE_MOCK_DATA } from "@/data/mockReviews";
 
 const FeaturedReviews = () => {
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchFeaturedReviews();
+  }, []);
+
+  const fetchFeaturedReviews = async () => {
+    try {
+      setLoading(true);
+      
+      // Si USE_MOCK_DATA está activado, usar datos locales
+      if (USE_MOCK_DATA) {
+        const reviewsData = mockReviews.slice(0, 3).map(review => ({
+          id: review.slug,
+          title: review.title,
+          genre: review.genre || "Sin género",
+          rating: review.rating,
+          date: new Date(review.publish_date).toLocaleDateString('es-ES', { 
+            day: 'numeric', 
+            month: 'short', 
+            year: 'numeric' 
+          }),
+          author: review.author,
+          excerpt: review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "",
+          image: review.image_url || "/placeholder.svg",
+          comments: review.comments_count || 0,
+          featured: false
+        }));
+        
+        setReviews(reviewsData);
+        setLoading(false);
+        return;
+      }
+      
+      // Si no, intentar cargar desde Supabase
+      const { data, error } = await supabase
+        .from("reviews")
+        .select("*")
+        .order("publish_date", { ascending: false })
+        .limit(3);
+
+      if (error) throw error;
+
+      if (data) {
+        const reviewsData = data.map(review => ({
+          id: review.slug,
+          title: review.title,
+          genre: review.genre || "Sin género",
+          rating: review.rating,
+          date: new Date(review.publish_date).toLocaleDateString('es-ES', { 
+            day: 'numeric', 
+            month: 'short', 
+            year: 'numeric' 
+          }),
+          author: review.author,
+          excerpt: review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "",
+          image: review.image_url || "/placeholder.svg",
+          comments: review.comments_count || 0,
+          featured: false
+        }));
+        
+        setReviews(reviewsData);
+      }
+    } catch (error) {
+      console.error("Error al cargar reseñas destacadas:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="py-16 bg-gradient-dark">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto"></div>
+            <p className="text-muted-foreground mt-4">Cargando análisis...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
   return (
     <section className="py-16 bg-gradient-dark">
       <div className="container mx-auto px-4">
@@ -44,7 +102,7 @@ const FeaturedReviews = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredReviews.map((review, index) => (
+          {reviews.map((review, index) => (
             <ReviewCard
               key={index}
               {...review}

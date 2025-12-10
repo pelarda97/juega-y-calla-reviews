@@ -13,6 +13,7 @@ import { useLikeDislike } from "@/hooks/useLikeDislike";
 import { usePageViews } from "@/hooks/useRealtimeStats";
 import { supabase } from "@/integrations/supabase/client";
 import gamingHero from "@/assets/gaming-hero.jpg";
+import { mockReviews, USE_MOCK_DATA } from "@/data/mockReviews";
 
 const ReviewDetail = () => {
   const { id } = useParams();
@@ -31,6 +32,38 @@ const ReviewDetail = () => {
       if (!id) return;
       
       try {
+        // Si USE_MOCK_DATA está activado, buscar en datos locales
+        if (USE_MOCK_DATA) {
+          const mockReview = mockReviews.find(r => r.slug === id);
+          
+          if (mockReview) {
+            setReview({
+              id: mockReview.slug,
+              title: mockReview.title,
+              gameTitle: mockReview.game_title,
+              rating: mockReview.rating,
+              author: mockReview.author,
+              publishDate: new Date(mockReview.publish_date).toLocaleDateString('es-ES', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+              }),
+              readTime: "12 min",
+              image: mockReview.image_url || gamingHero,
+              introduccion: mockReview.introduccion,
+              argumento: mockReview.argumento,
+              gameplay: mockReview.gameplay,
+              funciones: mockReview.funciones,
+              duracion: mockReview.duracion,
+              valoracion_personal: mockReview.valoracion_personal,
+              imagenes: mockReview.imagenes || []
+            });
+          }
+          setLoading(false);
+          return;
+        }
+        
+        // Si no, intentar cargar desde Supabase
         const { data, error } = await supabase
           .from('reviews')
           .select('*')
@@ -210,10 +243,21 @@ const ReviewDetail = () => {
             const isSpoilerSection = section.title === "Argumento" || section.title === "Valoración Personal";
             
             if (isSpoilerSection) {
-              // Dividir el contenido en dos partes: texto inicial y spoilers
-              const contentParts = section.content ? section.content.split('\n\n') : [];
-              const initialText = contentParts.slice(0, 1).join('\n\n'); // Primer párrafo
-              const spoilerText = contentParts.slice(1).join('\n\n'); // Resto del contenido
+              // Dividir el contenido usando el separador de spoilers
+              const spoilerSeparator = '--- A PARTIR DE AQUÍ: SPOILERS ---';
+              const hasSpoilers = section.content?.includes(spoilerSeparator);
+              
+              let initialText = '';
+              let spoilerText = '';
+              
+              if (hasSpoilers && section.content) {
+                const parts = section.content.split(spoilerSeparator);
+                initialText = parts[0].trim();
+                spoilerText = parts[1]?.trim() || '';
+              } else {
+                // Si no hay separador, mostrar todo el contenido sin sección de spoilers
+                initialText = section.content || '';
+              }
               
               return (
                 <Card key={section.title} className="border-border">

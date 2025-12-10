@@ -35,13 +35,20 @@ const ReviewCard = ({
 }: ReviewCardProps) => {
   const navigate = useNavigate();
   const renderGamepads = (rating: number) => {
-    return [...Array(5)].map((_, i) => (
-      <GamepadIcon
-        key={i}
-        filled={i < rating}
-        className="h-4 w-4"
-      />
-    ));
+    return [...Array(5)].map((_, i) => {
+      const isFullyFilled = i < Math.floor(rating);
+      const isHalfFilled = i === Math.floor(rating) && rating % 1 !== 0;
+      
+      return (
+        <GamepadIcon
+          key={i}
+          filled={isFullyFilled}
+          halfFilled={isHalfFilled}
+          fillPercentage={isHalfFilled ? (rating % 1) * 100 : 0}
+          className="h-4 w-4"
+        />
+      );
+    });
   };
 
   return (
@@ -80,7 +87,7 @@ const ReviewCard = ({
             <div className="flex items-center gap-1">
               {renderGamepads(rating)}
               <span className="text-sm font-semibold ml-1 text-accent">
-                {rating}.0
+                {rating % 1 === 0 ? `${rating}.0` : rating.toFixed(1)}
               </span>
             </div>
           </div>

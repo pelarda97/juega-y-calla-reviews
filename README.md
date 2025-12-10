@@ -1,73 +1,99 @@
-# Welcome to your Lovable project
+# Juega Y Calla - Reseñas de Videojuegos
 
-## Project info
+Plataforma web para reseñas honestas de videojuegos. Análisis completos con sistema de ratings, categorías por género, y gestión de comentarios.
 
-**URL**: https://lovable.dev/projects/2d133afb-23ab-44f4-9071-5a173406e865
+## Stack Tecnológico
 
-## How can I edit this code?
+- **Frontend**: React 18.3.1 + TypeScript 5.5.3
+- **Build Tool**: Vite 5.4.1
+- **UI**: Tailwind CSS + shadcn/ui
+- **Routing**: React Router 6.26.2
+- **Backend**: Supabase PostgreSQL
+- **Deployment**: Vercel (recomendado)
 
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/2d133afb-23ab-44f4-9071-5a173406e865) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Desarrollo Local
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Clonar el repositorio
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Navegar al directorio
+cd juega-y-calla
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Instalar dependencias
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Iniciar servidor de desarrollo
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Modo Mock Data
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Para desarrollo local sin conexión a Supabase, editar `src/data/mockReviews.ts`:
 
-**Use GitHub Codespaces**
+```typescript
+export const USE_MOCK_DATA = true; // Modo desarrollo local
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Cambiar a `false` para producción con Supabase.
 
-## What technologies are used for this project?
+## Scripts Disponibles
 
-This project is built with:
+- `npm run dev` - Iniciar servidor de desarrollo
+- `npm run build` - Compilar para producción
+- `npm run preview` - Previsualizar build de producción
+- `npm run upload-review <archivo.json>` - Subir reseña a Supabase
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Estructura de Reseñas
 
-## How can I deploy this project?
+Las reseñas se almacenan en formato JSON en `/reviews`:
 
-Simply open [Lovable](https://lovable.dev/projects/2d133afb-23ab-44f4-9071-5a173406e865) and click on Share -> Publish.
+```json
+{
+  "title": "Nombre del Juego",
+  "slug": "nombre-del-juego",
+  "genre": "Género",
+  "rating": 4.5,
+  "sections": [
+    {
+      "title": "Sección",
+      "content": "Contenido HTML permitido",
+      "order": 1
+    }
+  ],
+  "images": ["https://url-imagen.jpg"]
+}
+```
 
-## Can I connect a custom domain to my Lovable project?
+## Variables de Entorno
 
-Yes, you can!
+Crear archivo `.env` con:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```
+VITE_SUPABASE_URL=tu-url-supabase
+VITE_SUPABASE_ANON_KEY=tu-anon-key
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Deployment
+
+### Vercel (Recomendado)
+
+1. Conectar repositorio en [vercel.com](https://vercel.com)
+2. Configurar variables de entorno Supabase
+3. Deploy automático con cada push a main
+
+### Build Manual
+
+```sh
+npm run build
+# Archivos generados en /dist
+```
+
+## Roadmap
+
+- ✅ Sistema de ratings decimales con iconos de gamepad
+- ✅ Filtros por género
+- ✅ Secciones con spoilers colapsables
+- ✅ Modo mock data para desarrollo local
+- 🔄 Sistema de comentarios (UI pendiente)
+- 📅 Lanzamiento: Diciembre 23, 2025
