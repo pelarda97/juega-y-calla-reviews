@@ -17,6 +17,29 @@ export const useLikeDislike = (reviewSlug: string) => {
     return sessionId;
   };
 
+  // Check if cooldown period has passed (4 hours)
+  const canVote = (lastVoteKey: string): boolean => {
+    const lastVoteTime = localStorage.getItem(lastVoteKey);
+    if (!lastVoteTime) return true;
+    
+    const fourHoursInMs = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
+    const timeSinceLastVote = Date.now() - parseInt(lastVoteTime);
+    
+    return timeSinceLastVote >= fourHoursInMs;
+  };
+
+  // Get remaining cooldown time in minutes
+  const getRemainingCooldown = (lastVoteKey: string): number => {
+    const lastVoteTime = localStorage.getItem(lastVoteKey);
+    if (!lastVoteTime) return 0;
+    
+    const fourHoursInMs = 4 * 60 * 60 * 1000;
+    const timeSinceLastVote = Date.now() - parseInt(lastVoteTime);
+    const remainingMs = fourHoursInMs - timeSinceLastVote;
+    
+    return remainingMs > 0 ? Math.ceil(remainingMs / 60000) : 0;
+  };
+
   useEffect(() => {
     // Check if user has already voted
     const checkUserVote = async () => {
@@ -46,6 +69,22 @@ export const useLikeDislike = (reviewSlug: string) => {
   }, [reviewSlug]);
 
   const handleVote = async (isLike: boolean) => {
+    const voteKey = `vote_cooldown_${reviewSlug}`;
+    
+    // Check cooldown
+    if (!canVote(voteKey)) {
+      const remainingMinutes = getRemainingCooldown(voteKey);
+      const hours = Math.floor(remainingMinutes / 60);
+      const minutes = remainingMinutes % 60;
+      
+      toast({
+        title: "Espera un momento",
+        description: `Podrás cambiar tu voto en ${hours}h ${minutes}min`,
+        variant: "destructive"
+      });
+      return;
+    }
+    
     setLoading(true);
     try {
       const sessionId = getSessionId();
@@ -78,6 +117,7 @@ export const useLikeDislike = (reviewSlug: string) => {
             .eq('id', existingVote.id);
           
           setUserVote(null);
+          localStorage.removeItem(voteKey);
           toast({
             title: "Voto eliminado",
             description: "Has retirado tu valoración"
@@ -90,6 +130,7 @@ export const useLikeDislike = (reviewSlug: string) => {
             .eq('id', existingVote.id);
           
           setUserVote(isLike);
+          localStorage.setItem(voteKey, Date.now().toString());
           toast({
             title: isLike ? "Me gusta" : "No me gusta",
             description: "Tu valoración ha sido actualizada"
@@ -106,6 +147,7 @@ export const useLikeDislike = (reviewSlug: string) => {
           });
         
         setUserVote(isLike);
+        localStorage.setItem(voteKey, Date.now().toString());
         toast({
           title: isLike ? "Me gusta" : "No me gusta",
           description: "¡Gracias por tu valoración!"

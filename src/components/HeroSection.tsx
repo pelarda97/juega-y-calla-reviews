@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Star, TrendingUp, Users } from "lucide-react";
+import { Star, ThumbsUp, Eye } from "lucide-react";
 import heroImage from "@/assets/gaming-hero.jpg";
+import { useGlobalStats } from "@/hooks/useGlobalStats";
 
 const HeroSection = () => {
+  const { stats, loading } = useGlobalStats();
   return (
     <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
@@ -26,7 +28,7 @@ const HeroSection = () => {
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
-            Análisis completos y honestos para que tomes la mejor decisión antes de comprar o probar un videojuego.
+            Análisis completos y honestos para que tomes la mejor decisión antes de probar un videojuego.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
@@ -43,25 +45,31 @@ const HeroSection = () => {
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2 text-accent">
                 <Star className="h-6 w-6" />
-                <span className="text-2xl font-bold">2</span>
+                <span className="text-2xl font-bold">
+                  {loading ? "..." : stats.totalReviews}
+                </span>
               </div>
-              <span className="text-muted-foreground">Juegos Reseñados</span>
+              <span className="text-muted-foreground text-sm">Reseñas</span>
             </div>
             
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2 text-primary">
-                <TrendingUp className="h-6 w-6" />
-                <span className="text-2xl font-bold">0</span>
+                <ThumbsUp className="h-6 w-6" />
+                <span className="text-2xl font-bold">
+                  {loading ? "..." : stats.totalLikes}
+                </span>
               </div>
-              <span className="text-muted-foreground">Visitas a la Página</span>
+              <span className="text-muted-foreground text-sm">Me Gusta</span>
             </div>
             
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2 text-accent">
-                <Users className="h-6 w-6" />
-                <span className="text-2xl font-bold">0</span>
+                <Eye className="h-6 w-6" />
+                <span className="text-2xl font-bold">
+                  {loading ? "..." : stats.totalViews}
+                </span>
               </div>
-              <span className="text-muted-foreground">Gamers Registrados</span>
+              <span className="text-muted-foreground text-sm">Visitas</span>
             </div>
           </div>
         </div>

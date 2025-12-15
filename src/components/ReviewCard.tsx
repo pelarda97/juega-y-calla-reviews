@@ -1,4 +1,4 @@
-import { Calendar, User, MessageCircle, ThumbsUp, ThumbsDown } from "lucide-react";
+import { Calendar, User, MessageCircle, ThumbsUp, ThumbsDown, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +16,7 @@ interface ReviewCardProps {
   comments: number;
   likes?: number;
   dislikes?: number;
+  views?: number;
   featured?: boolean;
 }
 
@@ -31,6 +32,7 @@ const ReviewCard = ({
   comments,
   likes = 0,
   dislikes = 0,
+  views = 0,
   featured = false 
 }: ReviewCardProps) => {
   const navigate = useNavigate();
@@ -105,7 +107,7 @@ const ReviewCard = ({
         {/* Meta */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-1">
                 <User className="h-3 w-3" />
                 <span>{author}</span>
@@ -116,9 +118,15 @@ const ReviewCard = ({
               </div>
             </div>
             
-            <div className="flex items-center gap-1">
-              <MessageCircle className="h-3 w-3" />
-              <span>0</span>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1">
+                <Eye className="h-3 w-3" />
+                <span>{views}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <MessageCircle className="h-3 w-3" />
+                <span>0</span>
+              </div>
             </div>
           </div>
           

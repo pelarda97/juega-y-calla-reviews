@@ -38,6 +38,9 @@ const Reviews = () => {
           excerpt: review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "",
           image: review.image_url || "/placeholder.svg",
           comments: review.comments_count || 0,
+          likes: review.likes_count || 0,
+          dislikes: review.dislikes_count || 0,
+          views: review.views_count || 0,
           featured: false
         }));
         
@@ -70,6 +73,9 @@ const Reviews = () => {
           excerpt: review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "",
           image: review.image_url || "/placeholder.svg",
           comments: review.comments_count || 0,
+          likes: review.likes_count || 0,
+          dislikes: review.dislikes_count || 0,
+          views: review.views_count || 0,
           featured: false
         }));
         
@@ -141,9 +147,14 @@ const Reviews = () => {
               </div>
               <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border">
                 <div className="text-2xl font-bold text-accent">
-                  {reviews.reduce((sum, r) => sum + r.comments, 0)}
+                  {(() => {
+                    const totalLikes = reviews.reduce((sum, r) => sum + (r.likes || 0), 0);
+                    const totalDislikes = reviews.reduce((sum, r) => sum + (r.dislikes || 0), 0);
+                    const total = totalLikes + totalDislikes;
+                    return total > 0 ? `${Math.round((totalLikes / total) * 100)}%` : "0%";
+                  })()}
                 </div>
-                <div className="text-sm text-muted-foreground">Comentarios</div>
+                <div className="text-sm text-muted-foreground">Valoración Positiva</div>
               </div>
             </div>
           </div>

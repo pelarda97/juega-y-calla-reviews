@@ -1,11 +1,10 @@
-import { Mail } from "lucide-react";
 import ElectricGamepadLogo from "./ElectricGamepadLogo";
 
 const Footer = () => {
   return (
     <footer className="bg-background border-t border-border">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
@@ -18,15 +17,10 @@ const Footer = () => {
               La plataforma definitiva para reseñas de videojuegos. 
               Análisis honestos de una comunidad apasionada.
             </p>
-            <div className="flex items-center gap-4">
-              <a href="mailto:juegaycalla.reviews@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
-                <Mail className="h-5 w-5" />
-              </a>
-            </div>
           </div>
 
           {/* Navigation */}
-          <div className="space-y-4">
+          <div className="space-y-4 md:ml-8">
             <h3 className="text-lg font-semibold text-foreground">Explorar</h3>
             <ul className="space-y-2">
               <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Reseñas Recientes</a></li>

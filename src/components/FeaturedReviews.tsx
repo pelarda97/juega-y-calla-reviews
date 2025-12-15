@@ -31,6 +31,9 @@ const FeaturedReviews = () => {
           excerpt: review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "",
           image: review.image_url || "/placeholder.svg",
           comments: review.comments_count || 0,
+          likes: review.likes_count || 0,
+          dislikes: review.dislikes_count || 0,
+          views: review.views_count || 0,
           featured: false
         }));
         
@@ -63,6 +66,9 @@ const FeaturedReviews = () => {
           excerpt: review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "",
           image: review.image_url || "/placeholder.svg",
           comments: review.comments_count || 0,
+          likes: review.likes_count || 0,
+          dislikes: review.dislikes_count || 0,
+          views: review.views_count || 0,
           featured: false
         }));
         

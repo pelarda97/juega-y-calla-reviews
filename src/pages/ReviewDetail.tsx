@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, Calendar, User, Clock, Gamepad2, BookOpen, Settings, ThumbsUp, ThumbsDown, MessageCircle, FileText, Timer, Heart, Camera, AlertTriangle, ChevronDown } from "lucide-react";
+import { ArrowLeft, Star, Calendar, User, Clock, Gamepad2, BookOpen, Settings, ThumbsUp, ThumbsDown, MessageCircle, FileText, Timer, Heart, Camera, AlertTriangle, ChevronDown, Eye, X, ChevronLeft, ChevronRight, Play, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,11 +20,55 @@ const ReviewDetail = () => {
   const navigate = useNavigate();
   const [review, setReview] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageDirection, setImageDirection] = useState<'left' | 'right' | null>(null);
   const [openSpoilers, setOpenSpoilers] = useState<{ [key: string]: boolean }>({});
+  const [galleryExpanded, setGalleryExpanded] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
   
   const { stats } = useRealtimeStats(id || '');
   const { userVote, handleVote, loading: voteLoading } = useLikeDislike(id || '');
   const { recordPageView } = usePageViews();
+
+  // Minimum swipe distance (in pixels)
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (isLeftSwipe && currentImageIndex < galleryItems.length - 1) {
+      // Swipe left = next image
+      setImageDirection('right');
+      setTimeout(() => {
+        setCurrentImageIndex(prev => prev + 1);
+        setImageDirection(null);
+      }, 100);
+    }
+    
+    if (isRightSwipe && currentImageIndex > 0) {
+      // Swipe right = previous image
+      setImageDirection('left');
+      setTimeout(() => {
+        setCurrentImageIndex(prev => prev - 1);
+        setImageDirection(null);
+      }, 100);
+    }
+  };
 
   // Fetch review data from database
   useEffect(() => {
@@ -56,7 +100,8 @@ const ReviewDetail = () => {
               funciones: mockReview.funciones,
               duracion: mockReview.duracion,
               valoracion_personal: mockReview.valoracion_personal,
-              imagenes: mockReview.imagenes || []
+              imagenes: mockReview.imagenes || [],
+              video_url: mockReview.video_url || null
             });
           }
           setLoading(false);
@@ -92,7 +137,8 @@ const ReviewDetail = () => {
             funciones: data.funciones,
             duracion: data.duracion,
             valoracion_personal: data.valoracion_personal,
-            imagenes: data.imagenes || []
+            imagenes: data.imagenes || [],
+            video_url: (data as any).video_url || null
           });
           
           // Record page view
@@ -128,6 +174,38 @@ const ReviewDetail = () => {
   const getInitials = (name: string) => {
     return name.split(' ').map(word => word.charAt(0)).join('').toUpperCase();
   };
+
+  // Helper functions for video detection and processing
+  const getYouTubeVideoId = (url: string): string | null => {
+    // Si ya es una URL embed, extraer el ID directamente
+    if (url.includes('/embed/')) {
+      const embedMatch = url.match(/\/embed\/([^?&]+)/);
+      if (embedMatch) return embedMatch[1];
+    }
+    
+    // Para otros formatos de YouTube
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[7].length === 11) ? match[7] : null;
+  };
+
+  const isDirectVideo = (url: string): boolean => {
+    return /\.(mp4|webm|ogg)$/i.test(url);
+  };
+
+  const isYouTubeVideo = (url: string): boolean => {
+    return /(?:youtube\.com|youtu\.be)/.test(url);
+  };
+
+  // Create gallery items array (images + videos if exist)
+  const galleryItems = review ? [
+    ...(review.imagenes || []).map((url: string) => ({ type: 'image' as const, url })),
+    ...(review.video_url ? 
+      (Array.isArray(review.video_url) 
+        ? review.video_url.map((url: string) => ({ type: 'video' as const, url }))
+        : [{ type: 'video' as const, url: review.video_url }]
+      ) : [])
+  ] : [];
 
   if (loading) {
     return (
@@ -174,6 +252,11 @@ const ReviewDetail = () => {
     { title: "Valoración Personal", content: review.valoracion_personal, icon: Heart }
   ];
 
+  // Añadir Galería a la navegación si hay imágenes
+  const navSections = review?.imagenes && review.imagenes.length > 0 
+    ? [...sections, { title: "Galería", content: null, icon: Camera }]
+    : sections;
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -196,6 +279,8 @@ const ReviewDetail = () => {
               <img 
                 src={review.image} 
                 alt={review.title}
+                loading="eager"
+                fetchPriority="high"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -218,7 +303,7 @@ const ReviewDetail = () => {
                 </div>
               </div>
               
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <User className="h-4 w-4" />
                   <span>{review.author}</span>
@@ -231,9 +316,40 @@ const ReviewDetail = () => {
                   <Clock className="h-4 w-4" />
                   <span>{review.readTime} de lectura</span>
                 </div>
+                <div className="flex items-center gap-1">
+                  <Eye className="h-4 w-4" />
+                  <span>{stats.views_count} visitas</span>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Navigation Bar for Sections */}
+        <div className="mb-8 sticky top-16 z-40 bg-background/95 backdrop-blur-sm border-y border-border py-4">
+          <nav className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
+            {navSections.map((section) => (
+              <a
+                key={section.title}
+                href={`#${section.title.toLowerCase().replace(/\s+/g, '-')}`}
+                className="text-primary hover:text-accent transition-colors font-medium text-sm md:text-base flex items-center gap-1"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const element = document.getElementById(section.title.toLowerCase().replace(/\s+/g, '-'));
+                  if (element) {
+                    const offset = 140; // Offset for sticky header + spacing
+                    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                    window.scrollTo({
+                      top: elementPosition - offset,
+                      behavior: 'smooth'
+                    });
+                  }
+                }}
+              >
+                {section.title}
+              </a>
+            ))}
+          </nav>
         </div>
 
         {/* Review Sections */}
@@ -241,6 +357,7 @@ const ReviewDetail = () => {
           {sections.map((section, index) => {
             const IconComponent = section.icon;
             const isSpoilerSection = section.title === "Argumento" || section.title === "Valoración Personal";
+            const sectionId = section.title.toLowerCase().replace(/\s+/g, '-');
             
             if (isSpoilerSection) {
               // Dividir el contenido usando el separador de spoilers
@@ -260,7 +377,7 @@ const ReviewDetail = () => {
               }
               
               return (
-                <Card key={section.title} className="border-border">
+                <Card key={section.title} id={sectionId} className="border-border scroll-mt-32">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-foreground">
                       <IconComponent className="h-5 w-5 text-primary" />
@@ -318,7 +435,7 @@ const ReviewDetail = () => {
             }
             
             return (
-              <Card key={section.title} className="border-border">
+              <Card key={section.title} id={sectionId} className="border-border scroll-mt-32">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-foreground">
                     <IconComponent className="h-5 w-5 text-primary" />
@@ -335,30 +452,214 @@ const ReviewDetail = () => {
           })}
         </div>
 
-        {/* Image Gallery */}
-        {review.imagenes && review.imagenes.length > 0 && (
-          <Card className="border-border mt-8">
+        {/* Gallery (Images + Video) */}
+        {galleryItems.length > 0 && (
+          <Card id="galería" className="border-border mt-8 scroll-mt-32">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-foreground">
                 <Camera className="h-5 w-5 text-primary" />
-                Galería de Imágenes
+                Galería
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {review.imagenes.map((imagen: string, index: number) => (
-                  <div key={index} className="relative group overflow-hidden rounded-lg">
-                    <img 
-                      src={imagen} 
-                      alt={`Captura del juego ${index + 1}`}
-                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300"></div>
+                {(galleryExpanded ? galleryItems : galleryItems.slice(0, 2)).map((item, index) => (
+                  <div 
+                    key={index} 
+                    className="relative group overflow-hidden rounded-lg cursor-pointer"
+                    onClick={() => {
+                      setCurrentImageIndex(index);
+                      setLightboxOpen(true);
+                    }}
+                  >
+                    {item.type === 'image' ? (
+                      <>
+                        <img 
+                          src={item.url} 
+                          alt={`Captura del juego ${index + 1}`}
+                          loading="lazy"
+                          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                          <Eye className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="w-full h-48 bg-muted flex items-center justify-center relative">
+                          {isYouTubeVideo(item.url) && getYouTubeVideoId(item.url) ? (
+                            <img 
+                              src={`https://img.youtube.com/vi/${getYouTubeVideoId(item.url)}/hqdefault.jpg`}
+                              alt="Video thumbnail"
+                              loading="lazy"
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <Video className="h-16 w-16 text-muted-foreground" />
+                          )}
+                          <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                            <div className="bg-primary/90 rounded-full p-4 group-hover:scale-110 transition-transform">
+                              <Play className="h-8 w-8 text-white fill-white" />
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 ))}
+                {!galleryExpanded && galleryItems.length > 2 && (
+                  <div 
+                    className="relative group overflow-hidden rounded-lg cursor-pointer h-48 bg-muted/50 backdrop-blur-sm flex items-center justify-center"
+                    onClick={() => setGalleryExpanded(true)}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80 flex flex-col items-center justify-center gap-3 text-white">
+                      <Eye className="h-12 w-12" />
+                      <p className="text-xl font-semibold">Ver más</p>
+                      <p className="text-sm text-muted-foreground">+{galleryItems.length - 2} elementos</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
+        )}
+
+        {/* Lightbox Modal */}
+        {lightboxOpen && galleryItems.length > 0 && (
+          <div 
+            className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+            onClick={() => setLightboxOpen(false)}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setLightboxOpen(false)}
+              className="absolute top-2 right-2 sm:top-4 sm:right-4 text-white hover:text-accent transition-colors z-50 p-2 touch-manipulation"
+              aria-label="Cerrar"
+            >
+              <X className="h-6 w-6 sm:h-8 sm:w-8" />
+            </button>
+
+            {/* Previous Button - Hidden on mobile, use swipe instead */}
+            {currentImageIndex > 0 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setImageDirection('left');
+                  setTimeout(() => {
+                    setCurrentImageIndex(prev => prev - 1);
+                    setImageDirection(null);
+                  }, 100);
+                }}
+                className="hidden sm:block absolute left-2 sm:left-4 text-white hover:text-accent transition-colors z-50 p-2 touch-manipulation"
+                aria-label="Anterior"
+              >
+                <ChevronLeft className="h-8 w-8 sm:h-12 sm:w-12" />
+              </button>
+            )}
+
+            {/* Next Button - Hidden on mobile, use swipe instead */}
+            {currentImageIndex < galleryItems.length - 1 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setImageDirection('right');
+                  setTimeout(() => {
+                    setCurrentImageIndex(prev => prev + 1);
+                    setImageDirection(null);
+                  }, 100);
+                }}
+                className="hidden sm:block absolute right-2 sm:right-4 text-white hover:text-accent transition-colors z-50 p-2 touch-manipulation"
+                aria-label="Siguiente"
+              >
+                <ChevronRight className="h-8 w-8 sm:h-12 sm:w-12" />
+              </button>
+            )}
+
+            {/* Media Container with Slide Animation and Touch Support */}
+            <div 
+              className="max-w-7xl max-h-[90vh] w-full flex flex-col items-center justify-center overflow-hidden p-2 sm:p-4"
+              onClick={(e) => e.stopPropagation()}
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+            >
+              {!galleryItems[currentImageIndex] ? (
+                <div className="text-white text-center p-8 rounded-lg">
+                  <p className="text-xl">No hay contenido disponible</p>
+                </div>
+              ) : galleryItems[currentImageIndex].type === 'image' ? (
+                <img
+                  key={currentImageIndex}
+                  src={galleryItems[currentImageIndex].url}
+                  alt={`Captura del juego ${currentImageIndex + 1}`}
+                  className={`max-w-full max-h-[90vh] object-contain rounded-lg transition-all duration-500 ${
+                    imageDirection === 'right' 
+                      ? 'animate-slide-in-right' 
+                      : imageDirection === 'left' 
+                      ? 'animate-slide-in-left'
+                      : ''
+                  }`}
+                />
+              ) : galleryItems[currentImageIndex].type === 'video' ? (
+                <div className={`w-full max-w-3xl sm:max-w-5xl transition-all duration-500 ${
+                  imageDirection === 'right' 
+                    ? 'animate-slide-in-right' 
+                    : imageDirection === 'left' 
+                    ? 'animate-slide-in-left'
+                    : ''
+                }`}>
+                  {(() => {
+                    const videoUrl = galleryItems[currentImageIndex].url;
+                    const videoId = getYouTubeVideoId(videoUrl);
+                    
+                    if (videoId) {
+                      // Es un video de YouTube
+                      return (
+                        <div className="relative w-full bg-black rounded-lg" style={{ paddingBottom: '56.25%' }}>
+                          <iframe
+                            key={currentImageIndex}
+                            className="absolute top-0 left-0 w-full h-full rounded-lg"
+                            src={`https://www.youtube.com/embed/${videoId}?enablejsapi=1`}
+                            title="YouTube video player"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                          />
+                        </div>
+                      );
+                    } else {
+                      // Es un video directo
+                      return (
+                        <video
+                          key={currentImageIndex}
+                          controls
+                          playsInline
+                          className="w-full max-h-[70vh] sm:max-h-[90vh] rounded-lg"
+                        >
+                          <source src={videoUrl} type="video/mp4" />
+                          Tu navegador no soporta la reproducción de videos.
+                        </video>
+                      );
+                    }
+                  })()}
+                </div>
+              ) : (
+                <div className="text-white text-center p-8 rounded-lg">
+                  <p className="text-xl">Tipo de contenido no soportado</p>
+                </div>
+              )}
+            </div>
+
+            {/* Media Counter */}
+            <div className="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 text-white text-xs sm:text-sm bg-black/70 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-sm">
+              {currentImageIndex + 1} / {galleryItems.length}
+            </div>
+
+            {/* Swipe Indicator (only on mobile) */}
+            <div className="sm:hidden absolute bottom-16 left-1/2 transform -translate-x-1/2 text-white/60 text-xs text-center">
+              ← Desliza para navegar →
+            </div>
+          </div>
         )}
 
         {/* Interaction Section */}
@@ -373,25 +674,25 @@ const ReviewDetail = () => {
                 {/* Like/Dislike Section */}
                 <div className="flex flex-col items-center gap-4">
                   <h4 className="font-semibold text-foreground">Valora esta reseña</h4>
-                  <div className="flex flex-col sm:flex-row gap-3 w-full">
+                  <div className="flex flex-col gap-3 w-full max-w-xs">
                     <Button
                       variant={userVote === true ? "gaming" : "outline"}
-                      size="sm"
+                      size="lg"
                       onClick={() => handleVote(true)}
                       disabled={voteLoading}
-                      className="flex items-center gap-2 flex-1"
+                      className="flex items-center justify-center gap-2 w-full"
                     >
-                      <ThumbsUp className="h-4 w-4" />
+                      <ThumbsUp className="h-5 w-5" />
                       Me gusta ({stats.likes_count})
                     </Button>
                     <Button
                       variant={userVote === false ? "destructive" : "outline"}
-                      size="sm"
+                      size="lg"
                       onClick={() => handleVote(false)}
                       disabled={voteLoading}
-                      className="flex items-center gap-2 flex-1"
+                      className="flex items-center justify-center gap-2 w-full"
                     >
-                      <ThumbsDown className="h-4 w-4" />
+                      <ThumbsDown className="h-5 w-5" />
                       No me gusta ({stats.dislikes_count})
                     </Button>
                   </div>
@@ -399,7 +700,7 @@ const ReviewDetail = () => {
 
                 {/* Comments Section */}
                 <div className="flex flex-col items-center gap-4">
-                  <h4 className="font-semibold text-foreground">¿Te gustó esta review?</h4>
+                  <h4 className="font-semibold text-foreground text-center">Deja tu opinión o cualquier sugerencia sobre la reseña o el juego.</h4>
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
