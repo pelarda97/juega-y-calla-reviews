@@ -261,21 +261,21 @@ const ReviewDetail = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-6 sm:py-8">
         {/* Back Button */}
         <Button 
           variant="ghost" 
           onClick={() => navigate(-1)}
-          className="mb-6 hover:bg-primary/10"
+          className="mb-4 sm:mb-6 hover:bg-primary/10 min-h-[44px] touch-manipulation"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Volver a Reviews
         </Button>
 
         {/* Hero Section */}
-        <div className="relative mb-8">
+        <div className="relative mb-6 sm:mb-8">
           <div className="bg-card border border-border rounded-lg overflow-hidden">
-            <div className="h-64 bg-muted flex items-center justify-center">
+            <div className="h-48 sm:h-56 md:h-64 bg-muted flex items-center justify-center">
               <img 
                 src={review.image} 
                 alt={review.title}
@@ -285,39 +285,39 @@ const ReviewDetail = () => {
               />
             </div>
             
-            <div className="p-6">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+            <div className="p-4 sm:p-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
                 <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <Badge variant="secondary">Reseña</Badge>
+                      <Badge variant="secondary" className="text-xs sm:text-sm">Reseña</Badge>
                       <div className="flex items-center gap-1">
                         {renderGamepads(review.rating)}
-                        <span className="text-sm font-semibold ml-1 text-accent">
+                        <span className="text-xs sm:text-sm font-semibold ml-1 text-accent">
                           {review.rating}/5
                         </span>
                       </div>
                     </div>
-                  <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2">
                     {review.title}
                   </h1>
                 </div>
               </div>
               
-              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                <div className="flex items-center gap-1">
-                  <User className="h-4 w-4" />
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
+                <div className="flex items-center gap-1 sm:gap-1.5">
+                  <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span>{review.author}</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" />
+                <div className="flex items-center gap-1 sm:gap-1.5">
+                  <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span>{review.publishDate}</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
+                <div className="flex items-center gap-1 sm:gap-1.5">
+                  <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span>{review.readTime} de lectura</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Eye className="h-4 w-4" />
+                <div className="flex items-center gap-1 sm:gap-1.5">
+                  <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span>{stats.views_count} visitas</span>
                 </div>
               </div>
@@ -326,13 +326,13 @@ const ReviewDetail = () => {
         </div>
 
         {/* Navigation Bar for Sections */}
-        <div className="mb-8 sticky top-16 z-40 bg-background/95 backdrop-blur-sm border-y border-border py-4">
-          <nav className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
+        <div className="mb-6 sm:mb-8 sticky top-16 z-40 bg-background/95 backdrop-blur-sm border-y border-border py-3 sm:py-4 -mx-4 px-4">
+          <nav className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6">
             {navSections.map((section) => (
               <a
                 key={section.title}
                 href={`#${section.title.toLowerCase().replace(/\s+/g, '-')}`}
-                className="text-primary hover:text-accent transition-colors font-medium text-sm md:text-base flex items-center gap-1"
+                className="text-primary hover:text-accent transition-colors font-medium text-xs sm:text-sm md:text-base flex items-center gap-1 touch-manipulation min-h-[44px] py-2"
                 onClick={(e) => {
                   e.preventDefault();
                   const element = document.getElementById(section.title.toLowerCase().replace(/\s+/g, '-'));
@@ -360,15 +360,15 @@ const ReviewDetail = () => {
             const sectionId = section.title.toLowerCase().replace(/\s+/g, '-');
             
             if (isSpoilerSection) {
-              // Dividir el contenido usando el separador de spoilers
-              const spoilerSeparator = '--- A PARTIR DE AQUÍ: SPOILERS ---';
-              const hasSpoilers = section.content?.includes(spoilerSeparator);
+              // Dividir el contenido usando el separador de spoilers (regex para detectar variaciones con espacios)
+              const spoilerSeparatorRegex = /\s*---\s*A\s+PARTIR\s+DE\s+AQU[IÍ]\s*:\s*SPOILERS\s*---\s*/i;
+              const hasSpoilers = section.content ? spoilerSeparatorRegex.test(section.content) : false;
               
               let initialText = '';
               let spoilerText = '';
               
               if (hasSpoilers && section.content) {
-                const parts = section.content.split(spoilerSeparator);
+                const parts = section.content.split(spoilerSeparatorRegex);
                 initialText = parts[0].trim();
                 spoilerText = parts[1]?.trim() || '';
               } else {
@@ -378,16 +378,16 @@ const ReviewDetail = () => {
               
               return (
                 <Card key={section.title} id={sectionId} className="border-border scroll-mt-32">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-foreground">
-                      <IconComponent className="h-5 w-5 text-primary" />
+                  <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
+                    <CardTitle className="flex items-center gap-2 text-base sm:text-lg md:text-xl text-foreground">
+                      <IconComponent className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
                       {section.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
                     {/* Texto inicial sin spoilers */}
                     {initialText && (
-                      <div className="text-muted-foreground whitespace-pre-line mb-6">
+                      <div className="text-sm sm:text-base text-muted-foreground whitespace-pre-line mb-4 sm:mb-6 leading-relaxed">
                         {initialText}
                       </div>
                     )}
@@ -398,16 +398,16 @@ const ReviewDetail = () => {
                         open={openSpoilers[section.title]} 
                         onOpenChange={(open) => setOpenSpoilers(prev => ({ ...prev, [section.title]: open }))}
                       >
-                        <div className="bg-muted/30 border border-muted rounded-lg p-3 mb-4">
+                        <div className="bg-muted/30 border border-muted rounded-lg p-3 mb-3 sm:mb-4">
                           <div className="flex items-center gap-2 mb-2">
                             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-sm font-medium text-muted-foreground">Contenido con spoilers</span>
+                            <span className="text-xs sm:text-sm font-medium text-muted-foreground">Contenido con spoilers</span>
                           </div>
-                          <p className="text-muted-foreground text-xs mb-3">
+                          <p className="text-muted-foreground text-xs mb-2 sm:mb-3">
                             Esta sección contiene detalles de la trama.
                           </p>
                           <CollapsibleTrigger asChild>
-                            <Button variant="ghost" size="sm" className="text-xs h-7 px-2 text-muted-foreground hover:text-foreground">
+                            <Button variant="ghost" size="sm" className="text-xs h-9 sm:h-10 px-3 text-muted-foreground hover:text-foreground touch-manipulation">
                               <ChevronDown className={`h-3 w-3 mr-1 transition-transform ${openSpoilers[section.title] ? 'rotate-180' : ''}`} />
                               {openSpoilers[section.title] ? 'Ocultar spoilers' : 'Mostrar spoilers'}
                             </Button>
@@ -415,7 +415,7 @@ const ReviewDetail = () => {
                         </div>
                         
                         <CollapsibleContent className="space-y-4">
-                          <div className="text-muted-foreground whitespace-pre-line">
+                          <div className="text-sm sm:text-base text-muted-foreground whitespace-pre-line leading-relaxed">
                             {spoilerText}
                           </div>
                           
@@ -436,14 +436,14 @@ const ReviewDetail = () => {
             
             return (
               <Card key={section.title} id={sectionId} className="border-border scroll-mt-32">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-foreground">
-                    <IconComponent className="h-5 w-5 text-primary" />
+                <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
+                  <CardTitle className="flex items-center gap-2 text-base sm:text-lg md:text-xl text-foreground">
+                    <IconComponent className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
                     {section.title}
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-muted-foreground whitespace-pre-line">
+                <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+                  <div className="text-sm md:text-base lg:text-lg text-muted-foreground whitespace-pre-line leading-relaxed">
                     {section.content}
                   </div>
                 </CardContent>
@@ -454,19 +454,19 @@ const ReviewDetail = () => {
 
         {/* Gallery (Images + Video) */}
         {galleryItems.length > 0 && (
-          <Card id="galería" className="border-border mt-8 scroll-mt-32">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-foreground">
-                <Camera className="h-5 w-5 text-primary" />
+          <Card id="galería" className="border-border mt-6 sm:mt-8 scroll-mt-32">
+            <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg md:text-xl text-foreground">
+                <Camera className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 Galería
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {(galleryExpanded ? galleryItems : galleryItems.slice(0, 2)).map((item, index) => (
                   <div 
                     key={index} 
-                    className="relative group overflow-hidden rounded-lg cursor-pointer"
+                    className="relative group overflow-hidden rounded-lg cursor-pointer touch-manipulation"
                     onClick={() => {
                       setCurrentImageIndex(index);
                       setLightboxOpen(true);
@@ -478,15 +478,15 @@ const ReviewDetail = () => {
                           src={item.url} 
                           alt={`Captura del juego ${index + 1}`}
                           loading="lazy"
-                          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                          className="w-full h-40 sm:h-48 object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                          <Eye className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          <Eye className="h-6 w-6 sm:h-8 sm:w-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         </div>
                       </>
                     ) : (
                       <>
-                        <div className="w-full h-48 bg-muted flex items-center justify-center relative">
+                        <div className="w-full h-40 sm:h-48 bg-muted flex items-center justify-center relative">
                           {isYouTubeVideo(item.url) && getYouTubeVideoId(item.url) ? (
                             <img 
                               src={`https://img.youtube.com/vi/${getYouTubeVideoId(item.url)}/hqdefault.jpg`}
@@ -495,11 +495,11 @@ const ReviewDetail = () => {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <Video className="h-16 w-16 text-muted-foreground" />
+                            <Video className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground" />
                           )}
                           <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                            <div className="bg-primary/90 rounded-full p-4 group-hover:scale-110 transition-transform">
-                              <Play className="h-8 w-8 text-white fill-white" />
+                            <div className="bg-primary/90 rounded-full p-3 sm:p-4 group-hover:scale-110 transition-transform">
+                              <Play className="h-6 w-6 sm:h-8 sm:w-8 text-white fill-white" />
                             </div>
                           </div>
                         </div>
@@ -509,13 +509,13 @@ const ReviewDetail = () => {
                 ))}
                 {!galleryExpanded && galleryItems.length > 2 && (
                   <div 
-                    className="relative group overflow-hidden rounded-lg cursor-pointer h-48 bg-muted/50 backdrop-blur-sm flex items-center justify-center"
+                    className="relative group overflow-hidden rounded-lg cursor-pointer h-40 sm:h-48 bg-muted/50 backdrop-blur-sm flex items-center justify-center touch-manipulation"
                     onClick={() => setGalleryExpanded(true)}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80 flex flex-col items-center justify-center gap-3 text-white">
-                      <Eye className="h-12 w-12" />
-                      <p className="text-xl font-semibold">Ver más</p>
-                      <p className="text-sm text-muted-foreground">+{galleryItems.length - 2} elementos</p>
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80 flex flex-col items-center justify-center gap-2 sm:gap-3 text-white">
+                      <Eye className="h-10 w-10 sm:h-12 sm:w-12" />
+                      <p className="text-lg sm:text-xl font-semibold">Ver más</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">+{galleryItems.length - 2} elementos</p>
                     </div>
                   </div>
                 )}
@@ -619,7 +619,7 @@ const ReviewDetail = () => {
                           <iframe
                             key={currentImageIndex}
                             className="absolute top-0 left-0 w-full h-full rounded-lg"
-                            src={`https://www.youtube.com/embed/${videoId}?enablejsapi=1`}
+                            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1`}
                             title="YouTube video player"
                             frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -663,26 +663,26 @@ const ReviewDetail = () => {
         )}
 
         {/* Interaction Section */}
-        <div className="mt-12">
+        <div className="mt-8 sm:mt-12">
           <Card className="border-border">
-            <CardContent className="p-8">
-              <h3 className="text-2xl font-bold text-foreground mb-6 text-center">
+            <CardContent className="p-4 sm:p-6 md:p-8">
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 text-center">
                 ¿Te gustó esta review?
               </h3>
               
-              <div className="grid md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
                 {/* Like/Dislike Section */}
-                <div className="flex flex-col items-center gap-4">
-                  <h4 className="font-semibold text-foreground">Valora esta reseña</h4>
+                <div className="flex flex-col items-center gap-3 sm:gap-4">
+                  <h4 className="font-semibold text-sm sm:text-base text-foreground text-center">Valora esta reseña</h4>
                   <div className="flex flex-col gap-3 w-full max-w-xs">
                     <Button
                       variant={userVote === true ? "gaming" : "outline"}
                       size="lg"
                       onClick={() => handleVote(true)}
                       disabled={voteLoading}
-                      className="flex items-center justify-center gap-2 w-full"
+                      className="flex items-center justify-center gap-2 w-full min-h-[48px] touch-manipulation text-sm sm:text-base"
                     >
-                      <ThumbsUp className="h-5 w-5" />
+                      <ThumbsUp className="h-4 w-4 sm:h-5 sm:w-5" />
                       Me gusta ({stats.likes_count})
                     </Button>
                     <Button
@@ -690,23 +690,23 @@ const ReviewDetail = () => {
                       size="lg"
                       onClick={() => handleVote(false)}
                       disabled={voteLoading}
-                      className="flex items-center justify-center gap-2 w-full"
+                      className="flex items-center justify-center gap-2 w-full min-h-[48px] touch-manipulation text-sm sm:text-base"
                     >
-                      <ThumbsDown className="h-5 w-5" />
+                      <ThumbsDown className="h-4 w-4 sm:h-5 sm:w-5" />
                       No me gusta ({stats.dislikes_count})
                     </Button>
                   </div>
                 </div>
 
                 {/* Comments Section */}
-                <div className="flex flex-col items-center gap-4">
-                  <h4 className="font-semibold text-foreground text-center">Deja tu opinión o cualquier sugerencia sobre la reseña o el juego.</h4>
+                <div className="flex flex-col items-center gap-3 sm:gap-4">
+                  <h4 className="font-semibold text-sm sm:text-base text-foreground text-center px-2">Deja tu opinión o cualquier sugerencia sobre la reseña o el juego.</h4>
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => navigate(`/review/${id}/comments`)}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-2 min-h-[44px] touch-manipulation text-sm sm:text-base"
                     >
                       <MessageCircle className="h-4 w-4" />
                       Ver Comentarios ({stats.comments_count})
@@ -715,19 +715,19 @@ const ReviewDetail = () => {
                 </div>
 
                 {/* More Reviews Section */}
-                <div className="flex flex-col items-center gap-4">
-                  <h4 className="font-semibold text-foreground">Descubre más</h4>
+                <div className="flex flex-col items-center gap-3 sm:gap-4">
+                  <h4 className="font-semibold text-sm sm:text-base text-foreground">Descubre más</h4>
                   <div className="text-center space-y-3">
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-muted-foreground text-xs sm:text-sm px-2">
                       Explora más análisis detallados
                     </p>
                     <Button 
                       variant="gaming" 
                       size="lg"
                       onClick={() => navigate('/reviews')}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-2 min-h-[48px] touch-manipulation text-sm sm:text-base"
                     >
-                      <Gamepad2 className="h-5 w-5" />
+                      <Gamepad2 className="h-4 w-4 sm:h-5 sm:w-5" />
                       Ver Más Reviews
                     </Button>
                   </div>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Hash SHA-256 - Admin Panel</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    .input-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: border-color 0.3s;
+    }
+    input[type="password"]:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .result {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      display: none;
+    }
+    .result.show {
+      display: block;
+    }
+    .result h3 {
+      color: #333;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+    .hash-output {
+      background: white;
+      padding: 12px;
+      border-radius: 6px;
+      word-break: break-all;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: #667eea;
+      border: 1px solid #e0e0e0;
+    }
+    .copy-btn {
+      margin-top: 12px;
+      background: #10b981;
+      font-size: 14px;
+      padding: 10px;
+    }
+    .copy-btn:hover {
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+    }
+    .instructions {
+      margin-top: 30px;
+      padding: 20px;
+      background: #fff4e6;
+      border-left: 4px solid #f59e0b;
+      border-radius: 4px;
+    }
+    .instructions h4 {
+      color: #f59e0b;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .instructions ol {
+      padding-left: 20px;
+      color: #666;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+    .instructions code {
+      background: white;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      color: #667eea;
+    }
+    .security-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #dcfce7;
+      color: #166534;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    .strength-meter {
+      margin-top: 8px;
+      height: 4px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      overflow: hidden;
+      display: none;
+    }
+    .strength-meter.show {
+      display: block;
+    }
+    .strength-bar {
+      height: 100%;
+      transition: width 0.3s, background-color 0.3s;
+    }
+    .strength-text {
+      font-size: 12px;
+      margin-top: 4px;
+      display: none;
+    }
+    .strength-text.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 Generador de Hash SHA-256</h1>
+    <p class="subtitle">Para configurar tu contraseña de administrador</p>
+
+    <div class="input-group">
+      <label for="password">Tu Contraseña Nueva</label>
+      <input 
+        type="password" 
+        id="password" 
+        placeholder="Escribe una contraseña segura..."
+        autocomplete="new-password"
+      >
+      <div class="strength-meter" id="strengthMeter">
+        <div class="strength-bar" id="strengthBar"></div>
+      </div>
+      <div class="strength-text" id="strengthText"></div>
+    </div>
+
+    <button onclick="generateHash()">Generar Hash SHA-256</button>
+
+    <div class="result" id="result">
+      <h3>Tu Hash SHA-256:</h3>
+      <div class="hash-output" id="hashOutput"></div>
+      <button class="copy-btn" onclick="copyHash()">📋 Copiar Hash</button>
+      <div class="security-badge">
+        🛡️ Hash generado localmente - No se envía a ningún servidor
+      </div>
+    </div>
+
+    <div class="instructions">
+      <h4>⚙️ INSTRUCCIONES DE USO</h4>
+      <ol>
+        <li>Escribe tu contraseña segura arriba (mínimo 12 caracteres recomendado)</li>
+        <li>Haz click en "Generar Hash SHA-256"</li>
+        <li>Copia el hash generado</li>
+        <li>Abre el archivo <code>.env.local</code> en la raíz del proyecto</li>
+        <li>Reemplaza el valor de <code>VITE_ADMIN_PASSWORD_HASH</code> con tu nuevo hash</li>
+        <li>Reinicia el servidor con <code>npm run dev</code></li>
+        <li>Accede a <code>/admin/login</code> con tu nueva contraseña</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    const passwordInput = document.getElementById('password');
+    const strengthMeter = document.getElementById('strengthMeter');
+    const strengthBar = document.getElementById('strengthBar');
+    const strengthText = document.getElementById('strengthText');
+
+    // Password strength checker
+    passwordInput.addEventListener('input', (e) => {
+      const password = e.target.value;
+      if (password.length === 0) {
+        strengthMeter.classList.remove('show');
+        strengthText.classList.remove('show');
+        return;
+      }
+
+      strengthMeter.classList.add('show');
+      strengthText.classList.add('show');
+
+      let strength = 0;
+      let feedback = '';
+      let color = '';
+
+      // Check length
+      if (password.length >= 8) strength += 20;
+      if (password.length >= 12) strength += 20;
+      if (password.length >= 16) strength += 10;
+
+      // Check complexity
+      if (/[a-z]/.test(password)) strength += 10;
+      if (/[A-Z]/.test(password)) strength += 15;
+      if (/[0-9]/.test(password)) strength += 15;
+      if (/[^a-zA-Z0-9]/.test(password)) strength += 10;
+
+      // Determine feedback
+      if (strength < 30) {
+        feedback = '❌ Muy débil';
+        color = '#ef4444';
+      } else if (strength < 50) {
+        feedback = '⚠️ Débil';
+        color = '#f59e0b';
+      } else if (strength < 70) {
+        feedback = '✓ Aceptable';
+        color = '#eab308';
+      } else if (strength < 90) {
+        feedback = '✓✓ Fuerte';
+        color = '#22c55e';
+      } else {
+        feedback = '✓✓✓ Muy fuerte';
+        color = '#10b981';
+      }
+
+      strengthBar.style.width = strength + '%';
+      strengthBar.style.backgroundColor = color;
+      strengthText.textContent = feedback;
+      strengthText.style.color = color;
+    });
+
+    async function generateHash() {
+      const password = document.getElementById('password').value;
+      
+      if (!password) {
+        alert('❌ Por favor escribe una contraseña primero');
+        return;
+      }
+
+      if (password.length < 8) {
+        alert('⚠️ Se recomienda una contraseña de al menos 8 caracteres');
+      }
+
+      try {
+        // Encode password as UTF-8
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password);
+        
+        // Generate SHA-256 hash
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        
+        // Convert to hex string
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        
+        // Display result
+        document.getElementById('hashOutput').textContent = hashHex;
+        document.getElementById('result').classList.add('show');
+        
+      } catch (error) {
+        alert('❌ Error generando hash: ' + error.message);
+      }
+    }
+
+    function copyHash() {
+      const hash = document.getElementById('hashOutput').textContent;
+      navigator.clipboard.writeText(hash).then(() => {
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = '✅ ¡Copiado!';
+        btn.style.background = '#10b981';
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = '';
+        }, 2000);
+      }).catch(err => {
+        alert('❌ Error copiando: ' + err);
+      });
+    }
+
+    // Allow Enter key to generate
+    passwordInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        generateHash();
+      }
+    });
+  </script>
+</body>
+</html>

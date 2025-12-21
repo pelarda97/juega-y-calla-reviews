@@ -83,31 +83,28 @@ const FeaturedReviews = () => {
 
   if (loading) {
     return (
-      <section className="py-16 bg-gradient-dark">
+      <section className="py-12 sm:py-16 bg-gradient-dark">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto"></div>
-            <p className="text-muted-foreground mt-4">Cargando análisis...</p>
+            <p className="text-muted-foreground mt-4 text-sm sm:text-base">Cargando análisis...</p>
           </div>
         </div>
       </section>
     );
   }
   return (
-    <section className="py-16 bg-gradient-dark">
+    <section className="py-12 sm:py-16 bg-gradient-dark">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold">
             <span className="bg-gradient-accent bg-clip-text text-transparent">
               Análisis Destacados
             </span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Análisis completos para ayudarte a decidir antes de comprar
-          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {reviews.map((review, index) => (
             <ReviewCard
               key={index}
@@ -116,9 +113,9 @@ const FeaturedReviews = () => {
           ))}
         </div>
 
-        <div className="text-center mt-12">
+        <div className="text-center mt-8 sm:mt-12">
           <a href="/reviews">
-            <button className="bg-gradient-primary hover:shadow-glow-primary hover:scale-105 transition-all duration-300 text-primary-foreground font-semibold px-8 py-3 rounded-md">
+            <button className="bg-gradient-primary hover:shadow-glow-primary hover:scale-105 transition-all duration-300 text-primary-foreground font-semibold px-6 sm:px-8 py-3 rounded-md min-h-[48px] touch-manipulation text-sm sm:text-base w-full sm:w-auto">
               Ver Todos los Análisis
             </button>
           </a>

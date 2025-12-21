@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Search, Menu, X } from "lucide-react";
 import ElectricGamepadLogo from "./ElectricGamepadLogo";
 import { Button } from "@/components/ui/button";
@@ -21,15 +22,15 @@ const Header = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-10">
-          <a href="/" className="text-foreground hover:text-primary transition-colors font-medium">
+          <Link to="/" className="text-base lg:text-lg text-foreground hover:text-primary transition-colors font-medium">
             Inicio
-          </a>
-          <a href="/reviews" className="text-foreground hover:text-primary transition-colors font-medium">
+          </Link>
+          <Link to="/reviews" className="text-base lg:text-lg text-foreground hover:text-primary transition-colors font-medium">
             Reseñas
-          </a>
-          <a href="/quiz" className="text-foreground hover:text-primary transition-colors font-medium">
+          </Link>
+          <Link to="/quiz" className="text-base lg:text-lg text-foreground hover:text-primary transition-colors font-medium">
             Recomendaciones
-          </a>
+          </Link>
         </nav>
 
         {/* Search & Mobile Menu */}
@@ -88,27 +89,27 @@ const Header = () => {
         <div className="md:hidden bg-background border-t border-border animate-in slide-in-from-top duration-200">
           <div className="container mx-auto px-4 py-4">            
             <nav className="space-y-1">
-              <a 
-                href="/" 
+              <Link 
+                to="/" 
                 className="block py-3 px-2 text-foreground hover:text-primary hover:bg-secondary rounded-md transition-colors font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Inicio
-              </a>
-              <a 
-                href="/reviews" 
+              </Link>
+              <Link 
+                to="/reviews" 
                 className="block py-3 px-2 text-foreground hover:text-primary hover:bg-secondary rounded-md transition-colors font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Reseñas
-              </a>
-              <a 
-                href="/quiz" 
+              </Link>
+              <Link 
+                to="/quiz" 
                 className="block py-3 px-2 text-foreground hover:text-primary hover:bg-secondary rounded-md transition-colors font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Recomendaciones
-              </a>
+              </Link>
             </nav>
           </div>
         </div>

@@ -1,38 +1,32 @@
 {
-  "slug": "nombre-del-juego-en-minusculas-con-guiones",
-  "title": "Título de la Reseña (Nombre del Juego)",
-  "game_title": "Nombre Completo del Juego",
-  "rating": 4.5,
+  "slug": "nombre-juego-minusculas-con-guiones",
+  "title": "Título del Juego",
+  "game_title": "Título del Juego",
+  "rating": 8.5,
   "author": "Juega y Calla",
-  "publish_date": "2024-12-01",
-  "image_url": "/placeholder.svg",
-  "genre": "Género Principal (ej: RPG, Acción/Aventura, Estrategia, etc.)",
+  "publish_date": "2024-01-15",
+  "image_url": "https://images.igdb.com/igdb/image/upload/t_original/CODIGO_IMAGEN.jpg",
+  "genre": "Acción/Aventura",
   
-  "introduccion": "SECCIÓN 1: INTRODUCCIÓN\n\nEscribe aquí una introducción general del juego. Presenta el título, el estudio desarrollador, la plataforma y el contexto de lanzamiento.\n\nPuedes hablar de las expectativas iniciales, el hype previo al lanzamiento o cualquier información relevante que prepare al lector para la reseña.\n\nEsta sección NO debe contener spoilers.",
+  "introduccion": "Párrafo de introducción al juego. Incluye desarrollador, publisher, fecha de lanzamiento, plataformas disponibles y contexto general del título.",
   
-  "argumento": "SECCIÓN 2: ARGUMENTO\n\n=== PARTE VISIBLE (SIN SPOILERS) ===\nEscribe aquí la introducción de la trama SIN revelar detalles importantes. Habla del contexto inicial, el protagonista y la premisa básica.\n\nPuedes escribir varios párrafos aquí. Todo lo que esté ANTES del separador se verá siempre.\n\n--- A PARTIR DE AQUÍ: SPOILERS ---\n\n=== PARTE OCULTA (CON SPOILERS) ===\nAhora sí, detalla la trama completa. Esta parte estará oculta detrás del botón 'Mostrar spoilers'.\n\nPuedes hablar de giros argumentales, revelaciones importantes, el desarrollo de personajes y el desenlace.\n\nRecuerda: TODO lo que escribas DESPUÉS del separador '--- A PARTIR DE AQUÍ: SPOILERS ---' se ocultará automáticamente.",
+  "argumento": "Descripción completa de la historia y argumento del juego. Puedes incluir SPOILERS claramente marcados con '--- A PARTIR DE AQUÍ: SPOILERS ---' si es necesario.",
   
-  "gameplay": "SECCIÓN 3: GAMEPLAY\n\nDescribe aquí las mecánicas principales del juego:\n- Sistema de combate\n- Controles y manejo\n- Dificultad\n- Curva de aprendizaje\n- Sistemas de progresión (niveles, habilidades, equipamiento)\n\n¿Cómo se siente jugar a este título? ¿Es fluido? ¿Tiene problemas técnicos?\n\nEsta sección es donde explicas la experiencia jugable del día a día.",
+  "gameplay": "Análisis detallado de la jugabilidad, mecánicas principales, sistema de combate, controles y sensaciones durante el juego.",
   
-  "funciones": "SECCIÓN 4: FUNCIONES ESPECIALES\n\nAquí detalla características únicas o destacables del juego:\n- Modos de juego (historia, multijugador, cooperativo)\n- Sistemas especiales (crafteo, construcción, personalización)\n- Características innovadoras\n- Rejugabilidad y contenido post-game\n- DLCs o expansiones disponibles\n\nTodo lo que haga especial a este juego más allá del gameplay básico.",
+  "funciones": "Lista de funcionalidades principales del juego en formato de viñetas. Ejemplo:\n·Inventario limitado: Descripción...\n\n ·Fabricación: Descripción...\n\n ·Combate: Descripción...",
   
-  "duracion": "SECCIÓN 5: DURACIÓN\n\nIndica cuánto tiempo lleva completar el juego:\n- Historia principal: X horas\n- Completar al 100%: Y horas\n- Contenido secundario\n\n¿Vale la pena el precio por las horas de juego que ofrece?\n\nTambién puedes mencionar si tiene contenido endgame o si es un juego para jugar \"forever\" (como juegos de servicio).",
+  "duracion": "Información sobre la duración del juego según diferentes estilos de juego (historia principal, completar al 100%, exploración casual).",
   
-  "valoracion_personal": "SECCIÓN 6: VALORACIÓN PERSONAL\n\n=== PARTE VISIBLE (SIN SPOILERS) ===\nComienza con tu opinión general sin spoilers. Habla de tus impresiones globales, a quién le recomendarías el juego y por qué.\n\nPuedes escribir varios párrafos con tu análisis objetivo.\n\n--- A PARTIR DE AQUÍ: SPOILERS ---\n\n=== PARTE OCULTA (OPCIONAL - CON SPOILERS) ===\nSi necesitas mencionar elementos específicos que requieran spoilers para justificar tu valoración, hazlo aquí.\n\nPuedes hablar de momentos específicos, decisiones narrativas, plot twists que te gustaron o disgustaron.\n\nFINALMENTE: Incluye PROS y CONTRAS claros al final.",
+  "valoracion_personal": "Tu opinión personal sobre el juego. Puedes incluir críticas constructivas, aspectos destacables y tu recomendación final. Marca los SPOILERS si es necesario.",
   
   "imagenes": [
-    "/placeholder.svg",
-    "/placeholder.svg",
-    "/placeholder.svg"
+    "https://images.igdb.com/igdb/image/upload/t_original/CODIGO_1.jpg",
+    "https://images.igdb.com/igdb/image/upload/t_original/CODIGO_2.jpg",
+    "https://images.igdb.com/igdb/image/upload/t_original/CODIGO_3.jpg",
+    "https://images.igdb.com/igdb/image/upload/t_original/CODIGO_4.jpg",
+    "https://images.igdb.com/igdb/image/upload/t_original/CODIGO_5.jpg",
+    "https://images.igdb.com/igdb/image/upload/t_original/CODIGO_6.jpg"
   ],
-  
-  "INSTRUCCIONES": {
-    "slug": "IMPORTANTE: Debe ser único y en minúsculas con guiones. Ejemplo: 'the-last-of-us-2' o 'clair-obscur-expedition-33'",
-    "rating": "Puntuación de 0 a 5. Puede tener decimales: 3.5, 4.5, etc.",
-    "publish_date": "Formato: YYYY-MM-DD (Año-Mes-Día)",
-    "genre": "Usado para filtros. Ejemplos: RPG, Acción/Aventura, Shooter, Plataformas, Estrategia, Puzzle, Terror, Deportes",
-    "argumento_y_valoracion": "Estas dos secciones usan el sistema de spoilers. El contenido ANTES del texto '--- A PARTIR DE AQUÍ: SPOILERS ---' se muestra siempre. El contenido DESPUÉS se oculta detrás del botón.",
-    "saltos_de_linea": "Usa '\\n\\n' (doble salto) entre párrafos para mejor formato visual",
-    "imagenes": "Array de URLs. Puedes poner rutas locales (/images/juego1.jpg) o URLs externas. Sube las imágenes a Supabase Storage después"
-  }
+  "video_url": ["https://www.youtube.com/watch?v=ID_VIDEO_1", "https://www.youtube.com/watch?v=ID_VIDEO_2"]
 }

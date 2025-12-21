@@ -55,46 +55,48 @@ const ReviewCard = ({
 
   return (
     <article 
-      className={`group relative bg-card border border-border rounded-lg overflow-hidden hover:shadow-glow-primary transition-all duration-300 ${
+      className={`group relative bg-card border border-border rounded-lg overflow-hidden hover:shadow-glow-primary transition-all duration-300 cursor-pointer touch-manipulation ${
         featured ? "ring-2 ring-accent shadow-glow-accent" : ""
       }`}
+      onClick={() => navigate(`/review/${id}`)}
     >
       {/* Featured Badge */}
       {featured && (
-        <div className="absolute top-4 left-4 z-10">
-          <Badge variant="default" className="bg-gradient-accent font-semibold">
+        <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10">
+          <Badge variant="default" className="bg-gradient-accent font-semibold text-xs sm:text-sm">
             Destacada
           </Badge>
         </div>
       )}
 
       {/* Image */}
-      <div className="relative overflow-hidden h-48 bg-muted">
+      <div className="relative overflow-hidden h-40 sm:h-48 bg-muted">
         <img 
           src={image} 
           alt={title}
+          loading="lazy"
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
       {/* Content */}
-      <div className="p-6 space-y-4">
+      <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
         {/* Header */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <Badge variant="secondary" className="text-xs">
               {genre}
             </Badge>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 flex-shrink-0">
               {renderGamepads(rating)}
-              <span className="text-sm font-semibold ml-1 text-accent">
+              <span className="text-xs sm:text-sm font-semibold ml-1 text-accent">
                 {rating % 1 === 0 ? `${rating}.0` : rating.toFixed(1)}
               </span>
             </div>
           </div>
           
-          <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+          <h3 className="text-lg sm:text-xl font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2">
             {title}
           </h3>
         </div>
@@ -106,19 +108,19 @@ const ReviewCard = ({
 
         {/* Meta */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center justify-between text-xs text-muted-foreground gap-2">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <div className="flex items-center gap-1">
-                <User className="h-3 w-3" />
-                <span>{author}</span>
+                <User className="h-3 w-3 flex-shrink-0" />
+                <span className="truncate">{author}</span>
               </div>
               <div className="flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
-                <span>{date}</span>
+                <Calendar className="h-3 w-3 flex-shrink-0" />
+                <span className="whitespace-nowrap">{date}</span>
               </div>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               <div className="flex items-center gap-1">
                 <Eye className="h-3 w-3" />
                 <span>{views}</span>
@@ -146,8 +148,11 @@ const ReviewCard = ({
         {/* Action */}
         <Button 
           variant="outline" 
-          className="w-full group-hover:border-primary group-hover:text-primary transition-colors"
-          onClick={() => navigate(`/review/${id}`)}
+          className="w-full group-hover:border-primary group-hover:text-primary transition-colors min-h-[44px] touch-manipulation text-sm sm:text-base"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/review/${id}`);
+          }}
         >
           Leer Análisis Completo
         </Button>
