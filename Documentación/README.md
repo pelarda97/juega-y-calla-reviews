@@ -8,6 +8,7 @@ Esta carpeta contiene toda la documentación técnica y guías del proyecto "Jue
 - **[ADMIN-PANEL.md](ADMIN-PANEL.md)** - Guía completa de uso del panel admin, cambio de contraseñas y solución de problemas
 - **[SEGURIDAD-ADMIN.md](SEGURIDAD-ADMIN.md)** - Medidas de seguridad críticas, checklist pre-lanzamiento y protección contra ataques
 - **[FIX-ELIMINAR-COMENTARIOS.md](FIX-ELIMINAR-COMENTARIOS.md)** - Solución al problema de eliminación de comentarios (RLS Supabase)
+- **[SESION-SEGURIDAD-21DIC.md](SESION-SEGURIDAD-21DIC.md)** - ⭐ Documentación completa sesión seguridad: RLS, npm audit, Vite 7, CSP headers
 
 ### Sistema de Reseñas
 - **[COMO-CREAR-RESEÑAS.md](COMO-CREAR-RESEÑAS.md)** - Tutorial paso a paso para crear nuevas reseñas de videojuegos
