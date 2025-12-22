@@ -145,7 +145,9 @@ const ReviewDetail = () => {
           recordPageView('review', id);
         }
       } catch (error) {
-        console.error('Error fetching review:', error);
+        if (import.meta.env.DEV) {
+          console.error('Error fetching review:', error);
+        }
       } finally {
         setLoading(false);
       }
@@ -286,23 +288,67 @@ const ReviewDetail = () => {
             </div>
             
             <div className="p-4 sm:p-6">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
-                <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge variant="secondary" className="text-xs sm:text-sm">Reseña</Badge>
-                      <div className="flex items-center gap-1">
-                        {renderGamepads(review.rating)}
-                        <span className="text-xs sm:text-sm font-semibold ml-1 text-accent">
-                          {review.rating}/5
-                        </span>
-                      </div>
+              {/* Header: Title + Interaction Buttons */}
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-3 sm:mb-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge variant="secondary" className="text-xs sm:text-sm">Reseña</Badge>
+                    <div className="flex items-center gap-1">
+                      {renderGamepads(review.rating)}
+                      <span className="text-xs sm:text-sm font-semibold ml-1 text-accent">
+                        {review.rating}/5
+                      </span>
                     </div>
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2">
+                  </div>
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
                     {review.title}
                   </h1>
                 </div>
+
+                {/* Interaction Buttons - Now at title level */}
+                <div className="flex flex-col gap-2 min-w-[280px] lg:mt-8">
+                  {/* Like/Dislike Row */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      variant={userVote === true ? "gaming" : "outline"}
+                      size="sm"
+                      onClick={() => handleVote(true)}
+                      disabled={voteLoading}
+                      className="flex items-center justify-center gap-2 min-h-[44px] touch-manipulation w-full"
+                    >
+                      <ThumbsUp className="h-4 w-4" />
+                      <span className="text-xs sm:text-sm">Me gusta</span>
+                      <span className="font-semibold">({stats.likes_count})</span>
+                    </Button>
+
+                    <Button
+                      variant={userVote === false ? "destructive" : "outline"}
+                      size="sm"
+                      onClick={() => handleVote(false)}
+                      disabled={voteLoading}
+                      className="flex items-center justify-center gap-2 min-h-[44px] touch-manipulation w-full"
+                    >
+                      <ThumbsDown className="h-4 w-4" />
+                      <span className="text-xs sm:text-sm">No me gusta</span>
+                      <span className="font-semibold">({stats.dislikes_count})</span>
+                    </Button>
+                  </div>
+
+                  {/* Comment Button */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate(`/review/${id}/comments`)}
+                    className="flex items-center justify-center gap-2 min-h-[44px] touch-manipulation w-full"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    <span className="text-xs sm:text-sm">Deja un comentario</span>
+                    <span className="font-semibold">({stats.comments_count})</span>
+                  </Button>
+                </div>
               </div>
               
+              {/* Metadata */}
               <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
                 <div className="flex items-center gap-1 sm:gap-1.5">
                   <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
@@ -662,76 +708,26 @@ const ReviewDetail = () => {
           </div>
         )}
 
-        {/* Interaction Section */}
+        {/* More Reviews Call to Action */}
         <div className="mt-8 sm:mt-12">
           <Card className="border-border">
             <CardContent className="p-4 sm:p-6 md:p-8">
-              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 text-center">
-                ¿Te gustó esta review?
-              </h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-                {/* Like/Dislike Section */}
-                <div className="flex flex-col items-center gap-3 sm:gap-4">
-                  <h4 className="font-semibold text-sm sm:text-base text-foreground text-center">Valora esta reseña</h4>
-                  <div className="flex flex-col gap-3 w-full max-w-xs">
-                    <Button
-                      variant={userVote === true ? "gaming" : "outline"}
-                      size="lg"
-                      onClick={() => handleVote(true)}
-                      disabled={voteLoading}
-                      className="flex items-center justify-center gap-2 w-full min-h-[48px] touch-manipulation text-sm sm:text-base"
-                    >
-                      <ThumbsUp className="h-4 w-4 sm:h-5 sm:w-5" />
-                      Me gusta ({stats.likes_count})
-                    </Button>
-                    <Button
-                      variant={userVote === false ? "destructive" : "outline"}
-                      size="lg"
-                      onClick={() => handleVote(false)}
-                      disabled={voteLoading}
-                      className="flex items-center justify-center gap-2 w-full min-h-[48px] touch-manipulation text-sm sm:text-base"
-                    >
-                      <ThumbsDown className="h-4 w-4 sm:h-5 sm:w-5" />
-                      No me gusta ({stats.dislikes_count})
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Comments Section */}
-                <div className="flex flex-col items-center gap-3 sm:gap-4">
-                  <h4 className="font-semibold text-sm sm:text-base text-foreground text-center px-2">Deja tu opinión o cualquier sugerencia sobre la reseña o el juego.</h4>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(`/review/${id}/comments`)}
-                      className="flex items-center gap-2 min-h-[44px] touch-manipulation text-sm sm:text-base"
-                    >
-                      <MessageCircle className="h-4 w-4" />
-                      Ver Comentarios ({stats.comments_count})
-                    </Button>
-                  </div>
-                </div>
-
-                {/* More Reviews Section */}
-                <div className="flex flex-col items-center gap-3 sm:gap-4">
-                  <h4 className="font-semibold text-sm sm:text-base text-foreground">Descubre más</h4>
-                  <div className="text-center space-y-3">
-                    <p className="text-muted-foreground text-xs sm:text-sm px-2">
-                      Explora más análisis detallados
-                    </p>
-                    <Button 
-                      variant="gaming" 
-                      size="lg"
-                      onClick={() => navigate('/reviews')}
-                      className="flex items-center gap-2 min-h-[48px] touch-manipulation text-sm sm:text-base"
-                    >
-                      <Gamepad2 className="h-4 w-4 sm:h-5 sm:w-5" />
-                      Ver Más Reviews
-                    </Button>
-                  </div>
-                </div>
+              <div className="flex flex-col items-center gap-4 text-center">
+                <h3 className="text-xl sm:text-2xl font-bold text-foreground">
+                  Descubre más análisis
+                </h3>
+                <p className="text-muted-foreground text-sm sm:text-base max-w-2xl">
+                  Explora nuestras reseñas detalladas de los mejores videojuegos
+                </p>
+                <Button 
+                  variant="gaming" 
+                  size="lg"
+                  onClick={() => navigate('/reviews')}
+                  className="flex items-center gap-2 min-h-[48px] touch-manipulation text-sm sm:text-base mt-2"
+                >
+                  <Gamepad2 className="h-4 w-4 sm:h-5 sm:w-5" />
+                  Ver Más Reviews
+                </Button>
               </div>
             </CardContent>
           </Card>

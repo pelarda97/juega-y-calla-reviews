@@ -11,7 +11,7 @@ import Footer from "@/components/Footer";
 import { useThreadedComments, Comment } from "@/hooks/useThreadedComments";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { validateCommentContent, sanitizeContent } from "@/utils/contentFilter";
+import { validateCommentContent, validateAuthorName, sanitizeContent } from '@/utils/contentFilter';
 import { useCommentCooldown } from "@/hooks/useCommentCooldown";
 
 interface CommentThreadProps {
@@ -228,12 +228,12 @@ const Comments = () => {
       return;
     }
 
-    // Validar nombre del autor
-    const authorValidation = validateCommentContent(author);
+    // Validar nombre del autor con validación específica más estricta
+    const authorValidation = validateAuthorName(author);
     if (!authorValidation.isValid) {
       toast({
         title: "Nombre no permitido",
-        description: "Por favor usa un nombre apropiado",
+        description: authorValidation.reason || "Por favor usa un nombre apropiado",
         variant: "destructive"
       });
       return;
@@ -246,13 +246,27 @@ const Comments = () => {
     setSubmitting(true);
     try {
       // Get review ID
-      const { data: reviewData } = await supabase
+      const { data: reviewData, error: reviewError } = await supabase
         .from('reviews')
         .select('id')
         .eq('slug', id)
-        .single();
+        .maybeSingle();
+
+      if (import.meta.env.DEV) {
+        console.log('🔍 Review query result:', { reviewData, reviewError, slug: id });
+      }
+
+      if (reviewError) {
+        if (import.meta.env.DEV) {
+          console.error('❌ Error fetching review:', reviewError);
+        }
+        throw reviewError;
+      }
 
       if (!reviewData) {
+        if (import.meta.env.DEV) {
+          console.error('❌ Review not found for slug:', id);
+        }
         throw new Error('Review not found');
       }
 
@@ -286,7 +300,9 @@ const Comments = () => {
         description: "Tu mensaje ha sido añadido correctamente"
       });
     } catch (error) {
-      console.error('Error submitting comment:', error);
+      if (import.meta.env.DEV) {
+        console.error('Error submitting comment:', error);
+      }
       toast({
         title: "Error",
         description: "No se pudo publicar el mensaje. Inténtalo de nuevo.",
@@ -346,13 +362,12 @@ const Comments = () => {
                   <label htmlFor="authorName" className="block text-sm font-medium text-foreground mb-2">
                     Tu nombre
                   </label>
-                  <input
+                  <Input
                     id="authorName"
                     type="text"
                     placeholder="Escribe tu nombre..."
                     value={authorName}
                     onChange={(e) => setAuthorName(e.target.value)}
-                    className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
                 <div>
@@ -387,7 +402,7 @@ const Comments = () => {
                 )}
                 
                 <Button 
-                  onClick={handleSubmitComment}
+                  onClick={() => handleSubmitComment(null)}
                   disabled={submitting || hasReachedDailyLimit || !canComment}
                   className="w-full"
                   variant="gaming"

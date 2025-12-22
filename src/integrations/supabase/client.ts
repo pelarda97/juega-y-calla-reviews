@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
 const SUPABASE_URL = "https://nfqlspoluvzvcjkcxsoq.supabase.co";
+// Anon Key: This key is PUBLIC by design and safe to expose in frontend code.
+// It only allows operations permitted by Row Level Security (RLS) policies.
+// Reference: https://supabase.com/docs/guides/api/api-keys#the-anon-key
 const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mcWxzcG9sdXZ6dmNqa2N4c29xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxMzI3MzksImV4cCI6MjA3MTcwODczOX0.okCUK0r02cFBIDk0Y0HwhT7U8mRSatFTvyyw7tZPZ6Q";
 
 // Import the supabase client like this:

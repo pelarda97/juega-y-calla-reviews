@@ -41,7 +41,9 @@ export const useThreadedComments = (reviewSlug: string) => {
           }
         }
       } catch (error) {
-        console.error('Error fetching comments:', error);
+        if (import.meta.env.DEV) {
+          console.error('Error fetching comments:', error);
+        }
       } finally {
         setLoading(false);
       }

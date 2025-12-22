@@ -6,6 +6,10 @@ const FORBIDDEN_WORDS = [
   'pendejo', 'pendeja', 'chingar', 'pinche', 'culero', 'culera', 'mamón', 'mamona',
   'idiota', 'imbécil', 'estúpido', 'estúpida', 'retrasado', 'retrasada', 'mogólico', 'mogólica',
   
+  // Términos sexuales ofensivos
+  'cipote', 'polla', 'chocho', 'chocha', 'teta', 'tetas', 'culo', 'culos', 'rabo',
+  'pene', 'vagina', 'follar', 'folla', 'sexo oral', 'mamada', 'corrida',
+  
   // Términos racistas
   'negro de mierda', 'sudaca', 'moro', 'panchito', 'chino de mierda', 'gitano', 'gitana',
   
@@ -35,6 +39,9 @@ const FORBIDDEN_PATTERNS = [
   /n[i1!]gg[a@4e3\*]r/gi,         // nigger, n1gg3r, etc.
   /f[a@4]gg[o0\*]t/gi,            // faggot, f@gg0t, etc.
   /r[e3\*]tr[a@4]s[a@4]d[o0\*]/gi, // retrasado, r3tras@do, etc.
+  /c[i1!]p[o0\*]t[e3\*]/gi,       // cipote, c1p0te, etc.
+  /p[o0\*]ll[a@4]/gi,             // polla, p0ll@, etc.
+  /f[o0\*]ll[a@4]r/gi,            // follar, f0llar, etc.
 ];
 
 /**
@@ -92,6 +99,69 @@ export const validateCommentContent = (content: string): { isValid: boolean; rea
   const upperCaseRatio = wordsInUpperCase.length / content.split(/\s+/).length;
   if (upperCaseRatio > 0.7) {
     return { isValid: false, reason: 'Por favor, evita escribir todo en mayúsculas' };
+  }
+
+  return { isValid: true };
+};
+
+/**
+ * Valida específicamente nombres de autor con reglas más estrictas
+ * @param authorName - El nombre del autor a validar
+ * @returns { isValid: boolean, reason?: string }
+ */
+export const validateAuthorName = (authorName: string): { isValid: boolean; reason?: string } => {
+  if (!authorName || authorName.trim().length === 0) {
+    return { isValid: false, reason: 'El nombre no puede estar vacío' };
+  }
+
+  // Validar longitud mínima y máxima
+  if (authorName.trim().length < 2) {
+    return { isValid: false, reason: 'El nombre debe tener al menos 2 caracteres' };
+  }
+
+  if (authorName.length > 50) {
+    return { isValid: false, reason: 'El nombre no puede superar los 50 caracteres' };
+  }
+
+  const nameLower = authorName.toLowerCase();
+  
+  // Lista de nombres específicamente prohibidos (palabras ofensivas comunes usadas como nombres)
+  const BANNED_NAMES = [
+    'cipote', 'polla', 'puta', 'puto', 'cabron', 'cabrón', 'coño', 'joder', 
+    'mierda', 'verga', 'maricón', 'maricon', 'marica', 'follar', 'folla'
+  ];
+  
+  // Verificar nombres completos prohibidos (palabra completa, con límites de palabra)
+  for (const bannedName of BANNED_NAMES) {
+    // Crear regex para palabra completa: \b bannedName \b
+    const wordBoundaryRegex = new RegExp(`\\b${bannedName}\\b`, 'i');
+    if (wordBoundaryRegex.test(nameLower)) {
+      return {
+        isValid: false,
+        reason: 'Este nombre no está permitido. Por favor, elige un nombre apropiado.'
+      };
+    }
+  }
+  
+  // Detectar patrones como "H a r r y  C i p o t e" (espacios entre letras)
+  const nameWithoutSpaces = authorName.replace(/\s+/g, '').toLowerCase();
+  for (const bannedName of BANNED_NAMES) {
+    if (nameWithoutSpaces === bannedName || nameWithoutSpaces.includes(bannedName)) {
+      return {
+        isValid: false,
+        reason: 'Este nombre no está permitido. Por favor, elige un nombre apropiado.'
+      };
+    }
+  }
+
+  // Verificar patrones regex (para variaciones con números/símbolos)
+  for (const pattern of FORBIDDEN_PATTERNS) {
+    if (pattern.test(nameLower) || pattern.test(nameWithoutSpaces)) {
+      return {
+        isValid: false,
+        reason: 'Este nombre no está permitido. Por favor, elige un nombre apropiado.'
+      };
+    }
   }
 
   return { isValid: true };

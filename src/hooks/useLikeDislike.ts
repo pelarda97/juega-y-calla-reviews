@@ -154,7 +154,9 @@ export const useLikeDislike = (reviewSlug: string) => {
         });
       }
     } catch (error) {
-      console.error('Error voting:', error);
+      if (import.meta.env.DEV) {
+        console.error('Error voting:', error);
+      }
       toast({
         title: "Error",
         description: "No se pudo registrar tu voto. Inténtalo de nuevo.",

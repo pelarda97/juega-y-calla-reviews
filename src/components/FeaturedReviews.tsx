@@ -75,7 +75,9 @@ const FeaturedReviews = () => {
         setReviews(reviewsData);
       }
     } catch (error) {
-      console.error("Error al cargar reseñas destacadas:", error);
+      if (import.meta.env.DEV) {
+        console.error("Error al cargar reseñas destacadas:", error);
+      }
     } finally {
       setLoading(false);
     }

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -104,7 +105,9 @@ const AdminDashboard = () => {
       if (error) throw error;
       setReviews(data || []);
     } catch (error) {
-      console.error('Error fetching reviews:', error);
+      if (import.meta.env.DEV) {
+        console.error('Error fetching reviews:', error);
+      }
     }
   };
 
@@ -115,29 +118,38 @@ const AdminDashboard = () => {
 
     setLoading(true);
     try {
-      console.log('Intentando eliminar comentario:', commentId);
+      if (import.meta.env.DEV) {
+        console.log('🔐 Eliminando comentario con Service Role Key:', commentId);
+      }
       
-      const { data, error } = await supabase
+      // Usar cliente admin con Service Role Key (ignora RLS)
+      const { data, error } = await supabaseAdmin
         .from('comments')
         .delete()
         .eq('id', commentId)
         .select();
 
-      console.log('Respuesta de eliminación:', { data, error });
+      if (import.meta.env.DEV) {
+        console.log('✅ Respuesta de eliminación:', { data, error });
+      }
 
       if (error) {
-        console.error('Error de Supabase:', error);
+        if (import.meta.env.DEV) {
+          console.error('❌ Error de Supabase:', error);
+        }
         throw error;
       }
 
       toast({
-        title: 'Éxito',
+        title: '✅ Éxito',
         description: 'Comentario eliminado correctamente'
       });
 
       await fetchComments();
     } catch (error: any) {
-      console.error('Error deleting comment:', error);
+      if (import.meta.env.DEV) {
+        console.error('❌ Error deleting comment:', error);
+      }
       
       let errorMessage = 'No se pudo eliminar el comentario';
       
@@ -146,7 +158,7 @@ const AdminDashboard = () => {
       }
       
       if (error.code === 'PGRST301') {
-        errorMessage = 'Error de permisos. Necesitas configurar RLS en Supabase (ver SEGURIDAD-ADMIN.md)';
+        errorMessage = 'Error de permisos RLS. Verifica que Service Role Key esté configurada en .env.local';
       }
       
       toast({

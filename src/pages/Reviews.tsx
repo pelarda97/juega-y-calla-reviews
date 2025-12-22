@@ -86,7 +86,9 @@ const Reviews = () => {
         setGenres(uniqueGenres as string[]);
       }
     } catch (error) {
-      console.error("Error al cargar reseñas:", error);
+      if (import.meta.env.DEV) {
+        console.error("Error al cargar reseñas:", error);
+      }
     } finally {
       setLoading(false);
     }

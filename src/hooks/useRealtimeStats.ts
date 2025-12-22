@@ -177,7 +177,9 @@ export const usePageViews = () => {
         }
       }
     } catch (error) {
-      console.error('Error recording page view:', error);
+      if (import.meta.env.DEV) {
+        console.error('Error recording page view:', error);
+      }
     }
   };
 

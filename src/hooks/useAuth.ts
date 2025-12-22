@@ -5,7 +5,7 @@ interface AuthState {
   lastActivity: number;
 }
 
-const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+const SESSION_TIMEOUT = 15 * 60 * 1000; // 15 minutes (reduced for security)
 const STORAGE_KEY = 'admin_session';
 const ATTEMPTS_KEY = 'login_attempts';
 const MAX_ATTEMPTS = 5;
@@ -54,7 +54,7 @@ export const useAuth = () => {
 
   // Check session validity
   const checkSession = () => {
-    const sessionData = localStorage.getItem(STORAGE_KEY);
+    const sessionData = sessionStorage.getItem(STORAGE_KEY);
     if (!sessionData) {
       setIsAuthenticated(false);
       setIsLoading(false);
@@ -85,7 +85,7 @@ export const useAuth = () => {
       isAuthenticated: true,
       lastActivity: Date.now(),
     };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session));
   };
 
   // Login function
@@ -115,7 +115,7 @@ export const useAuth = () => {
         isAuthenticated: true,
         lastActivity: Date.now(),
       };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session));
       resetAttempts();
       setIsAuthenticated(true);
       return { success: true, message: 'Login exitoso' };
@@ -133,7 +133,7 @@ export const useAuth = () => {
 
   // Logout function
   const logout = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    sessionStorage.removeItem(STORAGE_KEY);
     setIsAuthenticated(false);
   };
 

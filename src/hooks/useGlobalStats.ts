@@ -57,7 +57,9 @@ export const useGlobalStats = () => {
           });
         }
       } catch (error) {
-        console.error('Error fetching global stats:', error);
+        if (import.meta.env.DEV) {
+          console.error('Error fetching global stats:', error);
+        }
       } finally {
         setLoading(false);
       }
