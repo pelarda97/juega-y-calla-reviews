@@ -144,7 +144,7 @@ export const useRealtimeComments = (reviewSlug: string) => {
 export const usePageViews = () => {
   const recordPageView = async (pageType: string, reviewSlug?: string) => {
     try {
-      // Generate a simple session ID (you might want to use a more sophisticated approach)
+      // Generate a simple session ID
       const sessionId = sessionStorage.getItem('session_id') || 
         Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
       
@@ -160,6 +160,16 @@ export const usePageViews = () => {
           .eq('slug', reviewSlug)
           .single();
         review_id = data?.id;
+
+        // Verificar si esta sesión ya registró una visita a esta review
+        const viewKey = `viewed_${reviewSlug}`;
+        if (sessionStorage.getItem(viewKey)) {
+          // Ya registramos esta visita, no duplicar
+          return;
+        }
+
+        // Marcar como visitada en esta sesión
+        sessionStorage.setItem(viewKey, 'true');
       }
 
       await supabase.from('page_views').insert({
