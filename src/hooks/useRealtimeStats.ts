@@ -20,16 +20,24 @@ export const useRealtimeStats = (reviewSlug: string) => {
   useEffect(() => {
     // Get initial stats
     const fetchStats = async () => {
-      const { data } = await supabase
-        .from('reviews')
-        .select('likes_count, dislikes_count, comments_count, views_count')
-        .eq('slug', reviewSlug)
-        .single();
-      
-      if (data) {
-        setStats(data);
+      try {
+        const { data, error } = await supabase
+          .from('reviews')
+          .select('likes_count, dislikes_count, comments_count, views_count')
+          .eq('slug', reviewSlug)
+          .single();
+        
+        if (data && !error) {
+          setStats(data);
+        }
+      } catch (error) {
+        // Si hay error (ej: Supabase pausado), mantener stats en 0
+        if (import.meta.env.DEV) {
+          console.error('Error fetching stats:', error);
+        }
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchStats();

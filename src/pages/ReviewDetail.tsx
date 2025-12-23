@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, Calendar, User, Clock, Gamepad2, BookOpen, Settings, ThumbsUp, ThumbsDown, MessageCircle, FileText, Timer, Heart, Camera, AlertTriangle, ChevronDown, Eye, X, ChevronLeft, ChevronRight, Play, Video } from "lucide-react";
+import { ArrowLeft, Star, Calendar, User, Gamepad2, BookOpen, Settings, ThumbsUp, ThumbsDown, MessageCircle, FileText, Timer, Heart, Camera, AlertTriangle, ChevronDown, Eye, X, ChevronLeft, ChevronRight, Play, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -87,12 +87,7 @@ const ReviewDetail = () => {
               gameTitle: mockReview.game_title,
               rating: mockReview.rating,
               author: mockReview.author,
-              publishDate: new Date(mockReview.publish_date).toLocaleDateString('es-ES', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-              }),
-              readTime: "12 min",
+              publishDate: mockReview.publish_date,
               image: mockReview.image_url || gamingHero,
               introduccion: mockReview.introduccion,
               argumento: mockReview.argumento,
@@ -124,12 +119,7 @@ const ReviewDetail = () => {
             gameTitle: data.game_title,
             rating: data.rating,
             author: data.author,
-            publishDate: new Date(data.publish_date).toLocaleDateString('es-ES', {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric'
-            }),
-            readTime: "12 min",
+            publishDate: data.publish_date,
             image: data.image_url || gamingHero,
             introduccion: data.introduccion,
             argumento: data.argumento,
@@ -357,10 +347,6 @@ const ReviewDetail = () => {
                 <div className="flex items-center gap-1 sm:gap-1.5">
                   <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span>{review.publishDate}</span>
-                </div>
-                <div className="flex items-center gap-1 sm:gap-1.5">
-                  <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
-                  <span>{review.readTime} de lectura</span>
                 </div>
                 <div className="flex items-center gap-1 sm:gap-1.5">
                   <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
