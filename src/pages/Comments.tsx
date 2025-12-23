@@ -282,7 +282,8 @@ const Comments = () => {
 
       if (error) throw error;
 
-      // Record comment for cooldown tracking
+      // Record comment for cooldown tracking AFTER successful insert
+      // This ensures the cooldown starts immediately
       recordComment(!!parentId);
 
       // Clear form

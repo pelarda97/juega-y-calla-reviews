@@ -22,11 +22,7 @@ const FeaturedReviews = () => {
           title: review.title,
           genre: review.genre || "Sin género",
           rating: review.rating,
-          date: new Date(review.publish_date).toLocaleDateString('es-ES', { 
-            day: 'numeric', 
-            month: 'short', 
-            year: 'numeric' 
-          }),
+          date: review.publish_date,
           author: review.author,
           excerpt: review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "",
           image: review.image_url || "/placeholder.svg",
@@ -57,11 +53,7 @@ const FeaturedReviews = () => {
           title: review.title,
           genre: review.genre || "Sin género",
           rating: review.rating,
-          date: new Date(review.publish_date).toLocaleDateString('es-ES', { 
-            day: 'numeric', 
-            month: 'short', 
-            year: 'numeric' 
-          }),
+          date: review.publish_date,
           author: review.author,
           excerpt: review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "",
           image: review.image_url || "/placeholder.svg",

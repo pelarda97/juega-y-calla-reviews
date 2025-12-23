@@ -84,6 +84,9 @@ export const useCommentCooldown = (reviewSlug: string) => {
     // Also store individual cooldown timestamps
     const cooldownKey = isReply ? getStorageKey('reply') : getStorageKey('main');
     localStorage.setItem(cooldownKey, Date.now().toString());
+    
+    // Force immediate update of cooldown state
+    setCooldownInfo(calculateCooldown());
   };
 
   // Calculate cooldown info
