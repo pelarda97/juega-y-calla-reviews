@@ -4,13 +4,17 @@ import { Search, Menu, X } from "lucide-react";
 import ElectricGamepadLogo from "./ElectricGamepadLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useScrollDirection } from "@/hooks/useScrollDirection";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const scrollDirection = useScrollDirection();
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <header className={`sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border transition-transform duration-300 ${
+      scrollDirection === 'down' ? '-translate-y-full' : 'translate-y-0'
+    }`}>
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-2 flex-shrink-0">

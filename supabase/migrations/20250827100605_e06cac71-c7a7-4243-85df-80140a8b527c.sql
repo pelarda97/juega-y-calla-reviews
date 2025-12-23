@@ -9,14 +9,13 @@ CREATE TABLE public.reviews (
   argumento TEXT,
   gameplay TEXT,
   funciones TEXT,
-  graficos TEXT,
-  audio TEXT,
-  conclusion TEXT,
-  pros TEXT[],
-  contras TEXT[],
+  duracion TEXT,
+  valoracion_personal TEXT,
+  imagenes TEXT[],
+  video_url TEXT[],
   image_url TEXT,
-  author TEXT NOT NULL DEFAULT 'GameReviewer',
-  publish_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  author TEXT NOT NULL DEFAULT 'Juega y Calla',
+  publish_date TEXT NOT NULL DEFAULT 'Fecha no disponible',
   likes_count INTEGER NOT NULL DEFAULT 0,
   dislikes_count INTEGER NOT NULL DEFAULT 0,
   comments_count INTEGER NOT NULL DEFAULT 0,
@@ -201,26 +200,3 @@ ALTER PUBLICATION supabase_realtime ADD TABLE public.reviews;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.comments;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.review_likes;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.page_views;
-
--- Insert sample data for existing review
-INSERT INTO public.reviews (
-  slug, title, game_title, rating, introduccion, argumento, gameplay, 
-  funciones, graficos, audio, conclusion, pros, contras, image_url,
-  likes_count, dislikes_count, comments_count, views_count
-) VALUES (
-  'the-last-of-us-2',
-  'The Last of Us Part II - Una obra maestra controversial',
-  'The Last of Us Part II',
-  8.5,
-  'The Last of Us Part II es una secuela que divide opiniones pero que técnicamente es impecable.',
-  'La historia sigue a Ellie en una búsqueda de venganza que la llevará a cuestionar todo lo que creía saber.',
-  'El gameplay mejora en todos los aspectos respecto al original, con combates más fluidos y mecánicas mejoradas.',
-  'Sistema de crafteo expandido, nuevas habilidades y mecánicas de sigilo mejoradas.',
-  'Visualmente es uno de los juegos más impresionantes de la generación anterior.',
-  'La banda sonora y el diseño de audio son excepcionales, creando una atmósfera única.',
-  'Un juego que no dejará indiferente a nadie, con momentos brillantes y controvertidos a partes iguales.',
-  ARRAY['Gráficos impresionantes', 'Gameplay mejorado', 'Actuaciones soberbias', 'Diseño de niveles excelente'],
-  ARRAY['Historia controvertida', 'Ritmo irregular', 'Duración excesiva en algunos momentos'],
-  '/src/assets/gaming-hero.jpg',
-  156, 23, 45, 1284
-);

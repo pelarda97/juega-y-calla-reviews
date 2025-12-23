@@ -13,6 +13,7 @@ import { useLikeDislike } from "@/hooks/useLikeDislike";
 import { usePageViews } from "@/hooks/useRealtimeStats";
 import { supabase } from "@/integrations/supabase/client";
 import gamingHero from "@/assets/gaming-hero.jpg";
+import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { mockReviews, USE_MOCK_DATA } from "@/data/mockReviews";
 
 const ReviewDetail = () => {
@@ -31,9 +32,30 @@ const ReviewDetail = () => {
   const { stats } = useRealtimeStats(id || '');
   const { userVote, handleVote, loading: voteLoading } = useLikeDislike(id || '');
   const { recordPageView } = usePageViews();
+  const scrollDirection = useScrollDirection();
+  const [navBarPassed, setNavBarPassed] = useState(false);
 
   // Minimum swipe distance (in pixels)
   const minSwipeDistance = 50;
+
+  // Detectar cuando hemos pasado la barra de navegación
+  useEffect(() => {
+    const handleScroll = () => {
+      const navBar = document.getElementById('section-nav-bar');
+      if (navBar) {
+        const navBarRect = navBar.getBoundingClientRect();
+        // La barra se considera "pasada" cuando su parte superior está por encima o en el header
+        // Es decir, cuando ya está sticky y pegada al header
+        setNavBarPassed(navBarRect.top <= 64);
+      }
+    };
+
+    // Ejecutar una vez al montar para establecer estado inicial
+    handleScroll();
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
@@ -358,7 +380,9 @@ const ReviewDetail = () => {
         </div>
 
         {/* Navigation Bar for Sections */}
-        <div className="mb-6 sm:mb-8 sticky top-16 z-40 bg-background/95 backdrop-blur-sm border-y border-border py-3 sm:py-4 -mx-4 px-4">
+        <div id="section-nav-bar" className={`mb-6 sm:mb-8 sticky top-16 z-40 bg-background/95 backdrop-blur-sm border-y border-border py-3 sm:py-4 -mx-4 px-4 transition-transform duration-300 ${
+          scrollDirection === 'down' && navBarPassed ? '-translate-y-[calc(100%+4rem)]' : 'translate-y-0'
+        }`}>
           <nav className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6">
             {navSections.map((section) => (
               <a
@@ -369,10 +393,20 @@ const ReviewDetail = () => {
                   e.preventDefault();
                   const element = document.getElementById(section.title.toLowerCase().replace(/\s+/g, '-'));
                   if (element) {
-                    const offset = 140; // Offset for sticky header + spacing
+                    // Obtener las barras sticky
+                    const header = document.querySelector('header');
+                    const navBar = document.getElementById('section-nav-bar');
+                    
+                    // Calcular altura total (header + navbar + pequeño margen)
+                    const headerHeight = header?.offsetHeight || 64;
+                    const navBarHeight = navBar?.offsetHeight || 0;
+                    const margin = 8; // Pequeño margen para que no quede pegado
+                    const totalOffset = headerHeight + navBarHeight + margin;
+                    
+                    // Scroll preciso al inicio del Card
                     const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
                     window.scrollTo({
-                      top: elementPosition - offset,
+                      top: elementPosition - totalOffset,
                       behavior: 'smooth'
                     });
                   }
@@ -409,7 +443,7 @@ const ReviewDetail = () => {
               }
               
               return (
-                <Card key={section.title} id={sectionId} className="border-border scroll-mt-32">
+                <Card key={section.title} id={sectionId} className="border-border scroll-mt-[140px]">
                   <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
                     <CardTitle className="flex items-center gap-2 text-base sm:text-lg md:text-xl text-foreground">
                       <IconComponent className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
@@ -467,7 +501,7 @@ const ReviewDetail = () => {
             }
             
             return (
-              <Card key={section.title} id={sectionId} className="border-border scroll-mt-32">
+              <Card key={section.title} id={sectionId} className="border-border scroll-mt-[140px]">
                 <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
                   <CardTitle className="flex items-center gap-2 text-base sm:text-lg md:text-xl text-foreground">
                     <IconComponent className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
@@ -486,7 +520,7 @@ const ReviewDetail = () => {
 
         {/* Gallery (Images + Video) */}
         {galleryItems.length > 0 && (
-          <Card id="galería" className="border-border mt-6 sm:mt-8 scroll-mt-32">
+          <Card id="galería" className="border-border mt-6 sm:mt-8 scroll-mt-[140px]">
             <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
               <CardTitle className="flex items-center gap-2 text-base sm:text-lg md:text-xl text-foreground">
                 <Camera className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
