@@ -322,11 +322,15 @@ const ReviewDetail = () => {
                   {/* Like/Dislike Row */}
                   <div className="grid grid-cols-2 gap-2">
                     <Button
-                      variant={userVote === true ? "gaming" : "outline"}
+                      variant={userVote === true ? "default" : "outline"}
                       size="sm"
                       onClick={() => handleVote(true)}
                       disabled={voteLoading}
-                      className="flex items-center justify-center gap-2 min-h-[44px] touch-manipulation w-full"
+                      className={`flex items-center justify-center gap-2 min-h-[44px] touch-manipulation w-full transition-all ${
+                        userVote === true 
+                          ? 'bg-emerald-500 hover:bg-emerald-600 text-white border-emerald-500' 
+                          : 'text-emerald-500 hover:text-emerald-600 hover:bg-emerald-500/10 hover:border-emerald-500 active:scale-95'
+                      }`}
                     >
                       <ThumbsUp className="h-4 w-4" />
                       <span className="text-xs sm:text-sm">Me gusta</span>
@@ -334,11 +338,15 @@ const ReviewDetail = () => {
                     </Button>
 
                     <Button
-                      variant={userVote === false ? "destructive" : "outline"}
+                      variant={userVote === false ? "default" : "outline"}
                       size="sm"
                       onClick={() => handleVote(false)}
                       disabled={voteLoading}
-                      className="flex items-center justify-center gap-2 min-h-[44px] touch-manipulation w-full"
+                      className={`flex items-center justify-center gap-2 min-h-[44px] touch-manipulation w-full transition-all ${
+                        userVote === false 
+                          ? 'bg-red-500 hover:bg-red-600 text-white border-red-500' 
+                          : 'text-red-600 hover:text-red-700 hover:bg-red-500/10 hover:border-red-500 active:scale-95'
+                      }`}
                     >
                       <ThumbsDown className="h-4 w-4" />
                       <span className="text-xs sm:text-sm">No me gusta</span>
@@ -351,7 +359,7 @@ const ReviewDetail = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => navigate(`/review/${id}/comments`)}
-                    className="flex items-center justify-center gap-2 min-h-[44px] touch-manipulation w-full"
+                    className="flex items-center justify-center gap-2 min-h-[44px] touch-manipulation w-full text-amber-600 hover:text-amber-700 hover:bg-amber-500/10 hover:border-amber-500 transition-all active:scale-95"
                   >
                     <MessageCircle className="h-4 w-4" />
                     <span className="text-xs sm:text-sm">Deja un comentario</span>
