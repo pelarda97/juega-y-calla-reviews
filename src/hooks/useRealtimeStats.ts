@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 interface ReviewStats {
@@ -124,7 +124,7 @@ export const useRealtimeComments = (reviewSlug: string) => {
 };
 
 export const usePageViews = () => {
-  const recordPageView = async (pageType: string, reviewSlug?: string) => {
+  const recordPageView = useCallback(async (pageType: string, reviewSlug?: string) => {
     try {
       // Generate a simple session ID
       const sessionId = sessionStorage.getItem('session_id') || 
@@ -154,34 +154,19 @@ export const usePageViews = () => {
         sessionStorage.setItem(viewKey, 'true');
       }
 
+      // Insert page view - el trigger incrementará views_count automáticamente
       await supabase.from('page_views').insert({
         page_type: pageType,
         review_id,
         user_session: sessionId,
         user_agent: navigator.userAgent
       });
-
-      // Also update view count for review if applicable
-      if (review_id) {
-        const { data: currentReview } = await supabase
-          .from('reviews')
-          .select('views_count')
-          .eq('id', review_id)
-          .single();
-
-        if (currentReview) {
-          await supabase
-            .from('reviews')
-            .update({ views_count: currentReview.views_count + 1 })
-            .eq('id', review_id);
-        }
-      }
     } catch (error) {
       if (import.meta.env.DEV) {
         console.error('Error recording page view:', error);
       }
     }
-  };
+  }, []); // useCallback sin dependencias (supabase es estable)
 
   return { recordPageView };
 };

@@ -42,6 +42,13 @@ const AdminDashboard = () => {
   const [reviewFilter, setReviewFilter] = useState<string>('all');
   const [loading, setLoading] = useState(false);
   const [reviews, setReviews] = useState<Array<{ id: string; title: string; slug: string }>>([]);
+  const [stats, setStats] = useState({
+    totalReviews: 0,
+    totalComments: 0,
+    totalLikes: 0,
+    totalDislikes: 0,
+    totalViews: 0,
+  });
   const { toast } = useToast();
 
   const handleLogout = () => {
@@ -49,11 +56,13 @@ const AdminDashboard = () => {
     navigate('/admin/login');
   };
 
-  // Cargar comentarios de Supabase
+  // Cargar comentarios y stats de Supabase
   useEffect(() => {
     if (activeTab === 'comments') {
       fetchComments();
       fetchReviews();
+    } else if (activeTab === 'dashboard') {
+      fetchStats();
     }
   }, [activeTab]);
 
@@ -171,13 +180,33 @@ const AdminDashboard = () => {
     }
   };
 
-  // Mock data - en producción vendría de Supabase
-  const stats = {
-    totalReviews: 2,
-    totalComments: comments.length,
-    totalLikes: 0,
-    totalDislikes: 0,
-    totalViews: 0,
+  const fetchStats = async () => {
+    try {
+      // Obtener stats agregadas de todas las reviews
+      const { data: reviewsData, error: reviewsError } = await supabase
+        .from('reviews')
+        .select('likes_count, dislikes_count, views_count, comments_count');
+
+      if (reviewsError) throw reviewsError;
+
+      if (reviewsData) {
+        const totals = reviewsData.reduce((acc, review) => ({
+          totalLikes: acc.totalLikes + (review.likes_count || 0),
+          totalDislikes: acc.totalDislikes + (review.dislikes_count || 0),
+          totalViews: acc.totalViews + (review.views_count || 0),
+          totalComments: acc.totalComments + (review.comments_count || 0),
+        }), { totalLikes: 0, totalDislikes: 0, totalViews: 0, totalComments: 0 });
+
+        setStats({
+          totalReviews: reviewsData.length,
+          ...totals
+        });
+      }
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        console.error('Error fetching stats:', error);
+      }
+    }
   };
 
   return (

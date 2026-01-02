@@ -166,7 +166,7 @@ const ReviewDetail = () => {
     };
 
     fetchReview();
-  }, [id, recordPageView]);
+  }, [id]); // Solo depende de id, recordPageView es estable (useCallback)
 
   const renderGamepads = (rating: number) => {
     return [...Array(5)].map((_, i) => {
