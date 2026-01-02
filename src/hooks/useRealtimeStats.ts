@@ -42,31 +42,13 @@ export const useRealtimeStats = (reviewSlug: string) => {
 
     fetchStats();
 
-    // Set up realtime subscription
-    const channel = supabase
-      .channel('review-stats')
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'reviews',
-          filter: `slug=eq.${reviewSlug}`
-        },
-        (payload) => {
-          const newStats = payload.new as any;
-          setStats({
-            likes_count: newStats.likes_count,
-            dislikes_count: newStats.dislikes_count,
-            comments_count: newStats.comments_count,
-            views_count: newStats.views_count
-          });
-        }
-      )
-      .subscribe();
+    // Poll stats every 30 seconds instead of Realtime (reduces egress from 1GB to ~50MB)
+    const interval = setInterval(() => {
+      fetchStats();
+    }, 30000); // 30 seconds
 
     return () => {
-      supabase.removeChannel(channel);
+      clearInterval(interval);
     };
   }, [reviewSlug]);
 

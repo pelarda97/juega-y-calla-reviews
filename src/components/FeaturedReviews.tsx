@@ -39,9 +39,10 @@ const FeaturedReviews = () => {
       }
       
       // Si no, intentar cargar desde Supabase
+      // Optimizado: solo columnas necesarias para featured
       const { data, error } = await supabase
         .from("reviews")
-        .select("*")
+        .select("slug, title, genre, rating, publish_date, author, image_url, likes_count, dislikes_count, comments_count, views_count, argumento, introduccion")
         .order("publish_date", { ascending: false })
         .limit(3);
 

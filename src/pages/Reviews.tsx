@@ -54,9 +54,10 @@ const Reviews = () => {
       }
       
       // Si no, intentar cargar desde Supabase
+      // Optimizado: solo columnas necesarias (reduce egress ~80%)
       const { data, error } = await supabase
         .from("reviews")
-        .select("*")
+        .select("slug, title, genre, rating, publish_date, author, image_url, likes_count, dislikes_count, comments_count, views_count, argumento, introduccion")
         .order("publish_date", { ascending: false });
 
       if (error) throw error;
