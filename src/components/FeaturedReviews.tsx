@@ -17,21 +17,31 @@ const FeaturedReviews = () => {
       
       // Si USE_MOCK_DATA está activado, usar datos locales
       if (USE_MOCK_DATA) {
-        const reviewsData = mockReviews.slice(0, 3).map(review => ({
+        const reviewsData = mockReviews.slice(0, 3).map(review => {
+          let excerptText = "";
+          if (review.slug === "god-of-war-ragnarok" && review.argumento) {
+            const afterFirstBreak = review.argumento.split("\n\n")[1] || review.argumento;
+            excerptText = afterFirstBreak.substring(0, 150) + "...";
+          } else {
+            excerptText = review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "";
+          }
+          
+          return {
           id: review.slug,
           title: review.title,
           genre: review.genre || "Sin género",
           rating: review.rating,
           date: review.publish_date,
           author: review.author,
-          excerpt: review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "",
+          excerpt: excerptText,
           image: review.image_url || "/placeholder.svg",
           comments: review.comments_count || 0,
           likes: review.likes_count || 0,
           dislikes: review.dislikes_count || 0,
           views: review.views_count || 0,
           featured: false
-        }));
+        };
+        });
         
         setReviews(reviewsData);
         setLoading(false);
@@ -49,21 +59,31 @@ const FeaturedReviews = () => {
       if (error) throw error;
 
       if (data) {
-        const reviewsData = data.map(review => ({
+        const reviewsData = data.map(review => {
+          let excerptText = "";
+          if (review.slug === "god-of-war-ragnarok" && review.argumento) {
+            const afterFirstBreak = review.argumento.split("\n\n")[1] || review.argumento;
+            excerptText = afterFirstBreak.substring(0, 150) + "...";
+          } else {
+            excerptText = review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "";
+          }
+          
+          return {
           id: review.slug,
           title: review.title,
           genre: review.genre || "Sin género",
           rating: review.rating,
           date: review.publish_date,
           author: review.author,
-          excerpt: review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "",
+          excerpt: excerptText,
           image: review.image_url || "/placeholder.svg",
           comments: review.comments_count || 0,
           likes: review.likes_count || 0,
           dislikes: review.dislikes_count || 0,
           views: review.views_count || 0,
           featured: false
-        }));
+        };
+        });
         
         setReviews(reviewsData);
       }

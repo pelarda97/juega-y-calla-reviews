@@ -28,21 +28,31 @@ const Reviews = () => {
       
       // Si USE_MOCK_DATA está activado, usar datos locales
       if (USE_MOCK_DATA) {
-        const reviewsWithExcerpt = mockReviews.map(review => ({
+        const reviewsWithExcerpt = mockReviews.map(review => {
+          let excerptText = "";
+          if (review.slug === "god-of-war-ragnarok" && review.argumento) {
+            const afterFirstBreak = review.argumento.split("\n\n")[1] || review.argumento;
+            excerptText = afterFirstBreak.substring(0, 150) + "...";
+          } else {
+            excerptText = review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "";
+          }
+          
+          return {
           id: review.slug,
           title: review.title,
           genre: review.genre || "Sin género",
           rating: review.rating,
           date: review.publish_date,
           author: review.author,
-          excerpt: review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "",
+          excerpt: excerptText,
           image: review.image_url || "/placeholder.svg",
           comments: review.comments_count || 0,
           likes: review.likes_count || 0,
           dislikes: review.dislikes_count || 0,
           views: review.views_count || 0,
           featured: false
-        }));
+        };
+        });
         
         setReviews(reviewsWithExcerpt);
         
@@ -64,21 +74,31 @@ const Reviews = () => {
 
       if (data) {
         // Extraer los primeros 150 caracteres de argumento como excerpt
-        const reviewsWithExcerpt = data.map(review => ({
+        const reviewsWithExcerpt = data.map(review => {
+          let excerptText = "";
+          if (review.slug === "god-of-war-ragnarok" && review.argumento) {
+            const afterFirstBreak = review.argumento.split("\n\n")[1] || review.argumento;
+            excerptText = afterFirstBreak.substring(0, 150) + "...";
+          } else {
+            excerptText = review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "";
+          }
+          
+          return {
           id: review.slug,
           title: review.title,
           genre: review.genre || "Sin género",
           rating: review.rating,
           date: review.publish_date,
           author: review.author,
-          excerpt: review.argumento?.substring(0, 150) + "..." || review.introduccion?.substring(0, 150) + "..." || "",
+          excerpt: excerptText,
           image: review.image_url || "/placeholder.svg",
           comments: review.comments_count || 0,
           likes: review.likes_count || 0,
           dislikes: review.dislikes_count || 0,
           views: review.views_count || 0,
           featured: false
-        }));
+        };
+        });
         
         setReviews(reviewsWithExcerpt);
 
