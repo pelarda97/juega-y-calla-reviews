@@ -461,7 +461,7 @@ const ReviewDetail = () => {
                   <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
                     {/* Texto inicial sin spoilers */}
                     {initialText && (
-                      <div className="text-sm sm:text-base text-muted-foreground whitespace-pre-line mb-4 sm:mb-6 leading-relaxed">
+                      <div className="text-sm sm:text-base md:text-base text-muted-foreground whitespace-pre-line mb-4 sm:mb-6 leading-relaxed">
                         {initialText}
                       </div>
                     )}
@@ -489,7 +489,7 @@ const ReviewDetail = () => {
                         </div>
                         
                         <CollapsibleContent className="space-y-4">
-                          <div className="text-sm sm:text-base text-muted-foreground whitespace-pre-line leading-relaxed">
+                          <div className="text-sm sm:text-base md:text-base text-muted-foreground whitespace-pre-line leading-relaxed">
                             {spoilerText}
                           </div>
                           
@@ -517,7 +517,7 @@ const ReviewDetail = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-                  <div className="text-sm md:text-base lg:text-lg text-muted-foreground whitespace-pre-line leading-relaxed">
+                  <div className="text-sm sm:text-base md:text-base text-muted-foreground whitespace-pre-line leading-relaxed">
                     {section.content}
                   </div>
                 </CardContent>
