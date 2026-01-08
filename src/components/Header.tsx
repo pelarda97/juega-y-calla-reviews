@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, Menu, X } from "lucide-react";
-import ElectricGamepadLogo from "./ElectricGamepadLogo";
+import ElectricGamepadLogoAnimated from "./ElectricGamepadLogoAnimated";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
@@ -18,7 +18,7 @@ const Header = () => {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-2 flex-shrink-0">
-          <ElectricGamepadLogo size={32} />
+          <ElectricGamepadLogoAnimated size={32} />
           <span className="text-xl sm:text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
             Juega y Calla
           </span>

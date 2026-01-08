@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Search, Filter, Calendar, Star, TrendingUp } from "lucide-react";
+import { Search, Filter, Calendar, Star, TrendingUp, ChevronDown } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ReviewCard from "@/components/ReviewCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { mockReviews, USE_MOCK_DATA } from "@/data/mockReviews";
@@ -13,6 +14,7 @@ import { mockReviews, USE_MOCK_DATA } from "@/data/mockReviews";
 const Reviews = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("date");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [genreFilter, setGenreFilter] = useState("all");
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -116,26 +118,84 @@ const Reviews = () => {
   };
 
   const filteredReviews = reviews.filter(review => {
-    const matchesSearch = review.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         review.genre.toLowerCase().includes(searchTerm.toLowerCase());
+    // Búsqueda por palabras que empiecen con el término (no letras sueltas en medio)
+    const searchLower = searchTerm.toLowerCase().trim();
+    const titleWords = review.title.toLowerCase().split(/\s+/);
+    const genreWords = review.genre.toLowerCase().split(/\s+/);
+    
+    const matchesSearch = searchTerm === "" || 
+      titleWords.some(word => word.startsWith(searchLower)) ||
+      genreWords.some(word => word.startsWith(searchLower));
+    
     const matchesGenre = genreFilter === "all" || review.genre.toLowerCase().includes(genreFilter.toLowerCase());
     return matchesSearch && matchesGenre;
   });
 
   const sortedReviews = [...filteredReviews].sort((a, b) => {
+    let comparison = 0;
+    
     switch (sortBy) {
       case "date":
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
+        // Parsear fechas correctamente (formato: "DD de Mes de YYYY")
+        const parseDate = (dateStr: string) => {
+          const months: { [key: string]: number } = {
+            "enero": 0, "febrero": 1, "marzo": 2, "abril": 3, "mayo": 4, "junio": 5,
+            "julio": 6, "agosto": 7, "septiembre": 8, "octubre": 9, "noviembre": 10, "diciembre": 11
+          };
+          const parts = dateStr.toLowerCase().split(" de ");
+          if (parts.length === 3) {
+            const day = parseInt(parts[0]);
+            const month = months[parts[1].trim()];
+            const year = parseInt(parts[2]);
+            return new Date(year, month, day).getTime();
+          }
+          return new Date(dateStr).getTime();
+        };
+        comparison = parseDate(b.date) - parseDate(a.date);
+        break;
       case "rating":
-        return b.rating - a.rating;
+        comparison = b.rating - a.rating;
+        break;
       case "popularity":
-        return b.comments - a.comments;
+        // Popularidad = likes + visitas (ponderado)
+        const popularityA = (a.likes * 2) + a.views;
+        const popularityB = (b.likes * 2) + b.views;
+        comparison = popularityB - popularityA;
+        break;
       case "title":
-        return a.title.localeCompare(b.title);
+        comparison = a.title.localeCompare(b.title);
+        break;
       default:
-        return 0;
+        comparison = 0;
     }
+    
+    // Invertir si la dirección es ascendente
+    return sortDirection === "desc" ? comparison : -comparison;
   });
+
+  // Handler para cambiar ordenamiento
+  const handleSortChange = (newSortBy: string) => {
+    if (newSortBy === sortBy) {
+      // Si es el mismo filtro, invertir dirección
+      setSortDirection(prev => prev === "desc" ? "asc" : "desc");
+    } else {
+      // Si es diferente, cambiar filtro y establecer dirección por defecto
+      setSortBy(newSortBy);
+      setSortDirection(newSortBy === "title" ? "asc" : "desc");
+    }
+  };
+
+  // Obtener etiqueta descriptiva del filtro actual
+  const getCurrentSortLabel = () => {
+    const labels: { [key: string]: string } = {
+      date: "Fecha",
+      rating: "Puntuación",
+      popularity: "Popularidad",
+      title: "Título A-Z"
+    };
+    const directionSymbol = sortDirection === "desc" ? " ↓" : " ↑";
+    return labels[sortBy] + directionSymbol;
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -224,32 +284,50 @@ const Reviews = () => {
               {/* Sort By */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-foreground">Ordenar por</label>
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="min-h-[44px] touch-manipulation">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="date" className="min-h-[44px]">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4" />
-                        Fecha
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="rating" className="min-h-[44px]">
-                      <div className="flex items-center gap-2">
-                        <Star className="h-4 w-4" />
-                        Puntuación
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="popularity" className="min-h-[44px]">
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="h-4 w-4" />
-                        Popularidad
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="title" className="min-h-[44px]">Título A-Z</SelectItem>
-                  </SelectContent>
-                </Select>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full min-h-[44px] touch-manipulation justify-between"
+                    >
+                      <span>{getCurrentSortLabel()}</span>
+                      <ChevronDown className="h-4 w-4 ml-2 opacity-50" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-[200px]">
+                    <DropdownMenuItem
+                      onClick={() => handleSortChange("date")}
+                      className="min-h-[44px] cursor-pointer"
+                    >
+                      <Calendar className="h-4 w-4 mr-2" />
+                      Fecha
+                      {sortBy === "date" && <span className="ml-auto">{sortDirection === "desc" ? "↓" : "↑"}</span>}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleSortChange("rating")}
+                      className="min-h-[44px] cursor-pointer"
+                    >
+                      <Star className="h-4 w-4 mr-2" />
+                      Puntuación
+                      {sortBy === "rating" && <span className="ml-auto">{sortDirection === "desc" ? "↓" : "↑"}</span>}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleSortChange("popularity")}
+                      className="min-h-[44px] cursor-pointer"
+                    >
+                      <TrendingUp className="h-4 w-4 mr-2" />
+                      Popularidad
+                      {sortBy === "popularity" && <span className="ml-auto">{sortDirection === "desc" ? "↓" : "↑"}</span>}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleSortChange("title")}
+                      className="min-h-[44px] cursor-pointer"
+                    >
+                      Título A-Z
+                      {sortBy === "title" && <span className="ml-auto">{sortDirection === "asc" ? "↑" : "↓"}</span>}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
 
               {/* Clear Filters */}
@@ -259,6 +337,7 @@ const Reviews = () => {
                   setSearchTerm("");
                   setGenreFilter("all");
                   setSortBy("date");
+                  setSortDirection("desc");
                 }}
                 className="min-h-[44px] touch-manipulation"
               >

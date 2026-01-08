@@ -359,7 +359,7 @@ const ReviewDetail = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => navigate(`/review/${id}/comments`)}
-                    className="flex items-center justify-center gap-2 min-h-[44px] touch-manipulation w-full text-amber-600 hover:text-amber-700 hover:bg-amber-500/10 hover:border-amber-500 transition-all active:scale-95"
+                    className="flex items-center justify-center gap-2 min-h-[44px] touch-manipulation w-full text-primary hover:text-primary hover:bg-primary/10 hover:border-primary transition-all active:scale-95"
                   >
                     <MessageCircle className="h-4 w-4" />
                     <span className="text-xs sm:text-sm">Deja un comentario</span>

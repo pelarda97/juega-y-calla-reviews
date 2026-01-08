@@ -1,4 +1,4 @@
-import ElectricGamepadLogo from "./ElectricGamepadLogo";
+import ElectricGamepadLogoAnimated from "./ElectricGamepadLogoAnimated";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -9,7 +9,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <ElectricGamepadLogo size={32} />
+              <ElectricGamepadLogoAnimated size={32} />
               <span className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
                 Juega y Calla
               </span>
