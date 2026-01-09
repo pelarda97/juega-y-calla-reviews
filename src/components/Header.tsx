@@ -13,7 +13,7 @@ const Header = () => {
 
   return (
     <header className={`sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border transition-transform duration-300 ${
-      scrollDirection === 'down' ? '-translate-y-full' : 'translate-y-0'
+      scrollDirection === 'down' && !isMenuOpen && !isSearchOpen ? '-translate-y-full' : 'translate-y-0'
     }`}>
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}

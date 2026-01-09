@@ -6,7 +6,7 @@ import { useGlobalStats } from "@/hooks/useGlobalStats";
 const HeroSection = () => {
   const { stats, loading } = useGlobalStats();
   return (
-    <section className="relative min-h-[60vh] sm:min-h-[70vh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[35vh] sm:min-h-[60vh] flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
         <img 
@@ -21,8 +21,8 @@ const HeroSection = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 py-8 text-center">
-        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+      <div className="relative z-10 container mx-auto px-4 py-3 sm:py-8 text-center">
+        <div className="max-w-4xl mx-auto space-y-2 sm:space-y-5">
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight">
             <span className="bg-gradient-primary bg-clip-text text-transparent">
               Juega y Calla
@@ -34,7 +34,7 @@ const HeroSection = () => {
           </p>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-3 sm:gap-6 mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-border/50 px-2">
+          <div className="grid grid-cols-3 gap-3 sm:gap-6 mt-4 sm:mt-12 pt-4 sm:pt-8 border-t border-border/50 px-2">
             <div className="flex flex-col items-center gap-1 sm:gap-2">
               <div className="flex items-center gap-1 sm:gap-2 text-accent">
                 <Star className="h-5 w-5 sm:h-6 sm:w-6" />

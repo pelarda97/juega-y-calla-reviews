@@ -1,5 +1,6 @@
 import { Calendar, User, MessageCircle, ThumbsUp, ThumbsDown, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import GamepadIcon from "@/components/GamepadIcon";
@@ -36,6 +37,33 @@ const ReviewCard = ({
   featured = false 
 }: ReviewCardProps) => {
   const navigate = useNavigate();
+  
+  // Detectar si es una reseña nueva (menos de 7 días) - Memoizado para performance
+  const isNew = useMemo(() => {
+    try {
+      // Parsear fechas en español: "5 de Enero de 2026"
+      const months: { [key: string]: number } = {
+        'enero': 0, 'febrero': 1, 'marzo': 2, 'abril': 3, 'mayo': 4, 'junio': 5,
+        'julio': 6, 'agosto': 7, 'septiembre': 8, 'octubre': 9, 'noviembre': 10, 'diciembre': 11
+      };
+      
+      const dateParts = date.toLowerCase().match(/(\d+)\s+de\s+(\w+)\s+de\s+(\d+)/);
+      if (dateParts) {
+        const day = parseInt(dateParts[1]);
+        const month = months[dateParts[2]];
+        const year = parseInt(dateParts[3]);
+        const publishDate = new Date(year, month, day);
+        const now = new Date();
+        const diffTime = Math.abs(now.getTime() - publishDate.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays <= 7;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  }, [date]);
+  
   const renderGamepads = (rating: number) => {
     return [...Array(5)].map((_, i) => {
       const isFullyFilled = i < Math.floor(rating);
@@ -65,6 +93,18 @@ const ReviewCard = ({
         <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10">
           <Badge variant="default" className="bg-gradient-accent font-semibold text-xs sm:text-sm">
             Destacada
+          </Badge>
+        </div>
+      )}
+
+      {/* New Badge */}
+      {isNew && (
+        <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10">
+          <Badge 
+            variant="default" 
+            className="font-semibold text-xs sm:text-sm shadow-lg bg-gradient-to-b from-blue-400 via-blue-500 to-blue-600 text-white border-0"
+          >
+            Novedad
           </Badge>
         </div>
       )}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Search, Filter, Calendar, Star, TrendingUp, ChevronDown } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ReviewCard from "@/components/ReviewCard";
@@ -12,13 +13,22 @@ import { supabase } from "@/integrations/supabase/client";
 import { mockReviews, USE_MOCK_DATA } from "@/data/mockReviews";
 
 const Reviews = () => {
+  const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("date");
+  const [sortBy, setSortBy] = useState(searchParams.get("sort") || "date");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [genreFilter, setGenreFilter] = useState("all");
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [genres, setGenres] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Leer parámetro sort de la URL
+    const sortParam = searchParams.get("sort");
+    if (sortParam) {
+      setSortBy(sortParam);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     fetchReviews();

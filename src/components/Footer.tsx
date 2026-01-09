@@ -24,8 +24,9 @@ const Footer = () => {
           <div className="space-y-4 md:ml-8">
             <h3 className="text-lg font-semibold text-foreground">Explorar</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Reseñas Recientes</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Mejor Valoradas</a></li>
+              <li><Link to="/reviews?sort=date" className="text-muted-foreground hover:text-primary transition-colors">Reseñas Recientes</Link></li>
+              <li><Link to="/reviews?sort=rating" className="text-muted-foreground hover:text-primary transition-colors">Mejor Valorados</Link></li>
+              <li><Link to="/reviews?sort=popularity" className="text-muted-foreground hover:text-primary transition-colors">Reseñas Populares</Link></li>
             </ul>
           </div>
 

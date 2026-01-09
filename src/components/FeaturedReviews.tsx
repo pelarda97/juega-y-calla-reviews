@@ -15,9 +15,53 @@ const FeaturedReviews = () => {
     try {
       setLoading(true);
       
+      // Función para detectar si una reseña es nueva (< 7 días)
+      const isNewReview = (publishDate: string) => {
+        try {
+          const months: { [key: string]: number } = {
+            'enero': 0, 'febrero': 1, 'marzo': 2, 'abril': 3, 'mayo': 4, 'junio': 5,
+            'julio': 6, 'agosto': 7, 'septiembre': 8, 'octubre': 9, 'noviembre': 10, 'diciembre': 11
+          };
+          
+          const dateParts = publishDate.toLowerCase().match(/(\d+)\s+de\s+(\w+)\s+de\s+(\d+)/);
+          if (dateParts) {
+            const day = parseInt(dateParts[1]);
+            const month = months[dateParts[2]];
+            const year = parseInt(dateParts[3]);
+            const reviewDate = new Date(year, month, day);
+            const now = new Date();
+            const diffTime = Math.abs(now.getTime() - reviewDate.getTime());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays <= 7;
+          }
+          return false;
+        } catch {
+          return false;
+        }
+      };
+      
       // Si USE_MOCK_DATA está activado, usar datos locales
       if (USE_MOCK_DATA) {
-        const reviewsData = mockReviews.slice(0, 3).map(review => {
+        // Calcular popularidad y separar nueva vs otras
+        const reviewsWithPopularity = mockReviews.map(review => ({
+          ...review,
+          popularity: (review.views_count || 0) + (review.likes_count || 0) * 2,
+          isNew: isNewReview(review.publish_date)
+        }));
+        
+        // Separar reseña nueva y otras
+        const newReview = reviewsWithPopularity.find(r => r.isNew);
+        const otherReviews = reviewsWithPopularity.filter(r => !r.isNew);
+        
+        // Ordenar otras por popularidad
+        otherReviews.sort((a, b) => b.popularity - a.popularity);
+        
+        // Construir array final: nueva primera, luego 2 más populares
+        const finalReviews = newReview 
+          ? [newReview, ...otherReviews.slice(0, 2)]
+          : otherReviews.slice(0, 3);
+        
+        const reviewsData = finalReviews.map(review => {
           let excerptText = "";
           if (review.slug === "god-of-war-ragnarok" && review.argumento) {
             const afterFirstBreak = review.argumento.split("\n\n")[1] || review.argumento;
@@ -49,17 +93,36 @@ const FeaturedReviews = () => {
       }
       
       // Si no, intentar cargar desde Supabase
-      // Optimizado: solo columnas necesarias para featured
+      // Optimización: Limitar a 10 reseñas más recientes para reducir egress
       const { data, error } = await supabase
         .from("reviews")
         .select("slug, title, genre, rating, publish_date, author, image_url, likes_count, dislikes_count, comments_count, views_count, argumento, introduccion")
         .order("publish_date", { ascending: false })
-        .limit(3);
+        .limit(10);
 
       if (error) throw error;
 
       if (data) {
-        const reviewsData = data.map(review => {
+        // Calcular popularidad y separar nueva vs otras
+        const reviewsWithPopularity = data.map(review => ({
+          ...review,
+          popularity: (review.views_count || 0) + (review.likes_count || 0) * 2,
+          isNew: isNewReview(review.publish_date)
+        }));
+        
+        // Separar reseña nueva y otras
+        const newReview = reviewsWithPopularity.find(r => r.isNew);
+        const otherReviews = reviewsWithPopularity.filter(r => !r.isNew);
+        
+        // Ordenar otras por popularidad
+        otherReviews.sort((a, b) => b.popularity - a.popularity);
+        
+        // Construir array final: nueva primera, luego 2 más populares
+        const finalReviews = newReview 
+          ? [newReview, ...otherReviews.slice(0, 2)]
+          : otherReviews.slice(0, 3);
+        
+        const reviewsData = finalReviews.map(review => {
           let excerptText = "";
           if (review.slug === "god-of-war-ragnarok" && review.argumento) {
             const afterFirstBreak = review.argumento.split("\n\n")[1] || review.argumento;
