@@ -19,18 +19,25 @@ const jsonFilePath = resolve(args[0]);
 
 // Read environment variables
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
+if (!supabaseUrl || !supabaseServiceKey) {
   console.error('❌ Error: Variables de entorno no configuradas');
-  console.log('\n📝 Asegúrate de tener un archivo .env con:');
+  console.log('\n📝 Asegúrate de tener un archivo .env.local con:');
   console.log('   VITE_SUPABASE_URL=tu_url');
-  console.log('   VITE_SUPABASE_PUBLISHABLE_KEY=tu_key\n');
+  console.log('   SUPABASE_SERVICE_ROLE_KEY=tu_service_key');
+  console.log('\n⚠️  IMPORTANTE: Usa la SERVICE ROLE KEY, no la ANON KEY');
+  console.log('💡 Encuentra la SERVICE ROLE KEY en: Supabase Dashboard → Settings → API\n');
   process.exit(1);
 }
 
-// Initialize Supabase client
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Initialize Supabase ADMIN client (bypasses RLS)
+const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false
+  }
+});
 
 async function uploadReview() {
   try {

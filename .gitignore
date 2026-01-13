@@ -36,5 +36,10 @@ bun.lockb
 mi-nueva-reseña.json
 *-draft.json
 
+# Archivos de testing local
+test-security.html
+audit-security.js
+test-simple.js
+
 # Supabase local
 .supabase

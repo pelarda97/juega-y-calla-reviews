@@ -14,15 +14,16 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/integrations/supabase/types';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://nfqlspoluvzvcjkcxsoq.supabase.co";
-const supabaseServiceKey = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
-// Verificar que la Service Role Key esté configurada
-if (!supabaseServiceKey) {
-  if (import.meta.env.DEV) {
-    console.error('❌ VITE_SUPABASE_SERVICE_ROLE_KEY no está configurada en .env.local');
-    console.error('💡 Si acabas de añadirla, reinicia el servidor de desarrollo (npm run dev)');
-  }
-  throw new Error('Service Role Key no configurada. Verifica .env.local y reinicia el servidor');
+// ⚠️ NOTA: Esta variable SOLO se usa en scripts Node.js (upload-review.js)
+// NO se debe usar en el frontend porque expondría la clave privada
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+// Verificar que la Service Role Key esté configurada (solo en Node.js)
+if (!supabaseServiceKey && typeof process !== 'undefined') {
+  console.error('❌ SUPABASE_SERVICE_ROLE_KEY no está configurada en .env.local');
+  console.error('💡 Sigue la guía GUIA-SEGURIDAD.md para configurarla');
+  throw new Error('Service Role Key no configurada. Verifica .env.local');
 }
 
 // Cliente admin con permisos elevados
