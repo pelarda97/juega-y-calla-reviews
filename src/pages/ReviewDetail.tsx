@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Star, Calendar, User, Gamepad2, BookOpen, Settings, ThumbsUp, ThumbsDown, MessageCircle, FileText, Timer, Heart, Camera, AlertTriangle, ChevronDown, Eye, X, ChevronLeft, ChevronRight, Play, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -34,9 +34,30 @@ const ReviewDetail = () => {
   const { recordPageView } = usePageViews();
   const scrollDirection = useScrollDirection();
   const [navBarPassed, setNavBarPassed] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
+  const [allowAutoHide, setAllowAutoHide] = useState(true);
 
   // Minimum swipe distance (in pixels)
   const minSwipeDistance = 50;
+
+  // Detectar interacción real del usuario (wheel/touch) para reactivar auto-hide después de navegación por clic
+  useEffect(() => {
+    if (!allowAutoHide) {
+      const handleUserInteraction = () => {
+        // Reactivar auto-hide cuando el usuario interactúa activamente (wheel o touch)
+        setAllowAutoHide(true);
+      };
+
+      // Escuchar eventos de interacción real del usuario
+      window.addEventListener('wheel', handleUserInteraction, { passive: true });
+      window.addEventListener('touchstart', handleUserInteraction, { passive: true });
+      
+      return () => {
+        window.removeEventListener('wheel', handleUserInteraction);
+        window.removeEventListener('touchstart', handleUserInteraction);
+      };
+    }
+  }, [allowAutoHide]);
 
   // Detectar cuando hemos pasado la barra de navegación
   useEffect(() => {
@@ -224,7 +245,7 @@ const ReviewDetail = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
+        <Header isNavigating={isNavigating} allowAutoHide={allowAutoHide} />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
@@ -239,7 +260,7 @@ const ReviewDetail = () => {
   if (!review) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
+        <Header isNavigating={isNavigating} allowAutoHide={allowAutoHide} />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-foreground">Reseña no encontrada</h1>
@@ -271,9 +292,32 @@ const ReviewDetail = () => {
     ? [...sections, { title: "Galería", content: null, icon: Camera }]
     : sections;
 
+  // Función helper para manejar navegación sin ocultar el nav-bar
+  const handleNavClick = (sectionId: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setIsNavigating(true); // Bloquear auto-hide durante navegación
+    setAllowAutoHide(false); // Bloquear auto-hide hasta que el usuario haga scroll manual (wheel/touch)
+    
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const header = document.querySelector('header');
+      const navBar = document.getElementById('section-nav-bar');
+      const headerHeight = header?.offsetHeight || 64;
+      const navBarHeight = navBar?.offsetHeight || 0;
+      const margin = 8;
+      const totalOffset = headerHeight + navBarHeight + margin;
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      
+      window.scrollTo({ top: elementPosition - totalOffset, behavior: 'smooth' });
+      
+      // Desbloquear isNavigating después de la animación de scroll
+      setTimeout(() => setIsNavigating(false), 800);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header isNavigating={isNavigating} allowAutoHide={allowAutoHide} />
       
       <main className="container mx-auto px-4 py-6 sm:py-8">
         {/* Back Button */}
@@ -387,42 +431,68 @@ const ReviewDetail = () => {
           </div>
         </div>
 
-        {/* Navigation Bar for Sections */}
-        <div id="section-nav-bar" className={`mb-6 sm:mb-8 sticky top-16 z-40 bg-background/95 backdrop-blur-sm border-y border-border py-3 sm:py-4 -mx-4 px-4 transition-transform duration-300 ${
-          scrollDirection === 'down' && navBarPassed ? '-translate-y-[calc(100%+4rem)]' : 'translate-y-0'
+        {/* Navigation Bar for Sections - Responsive: 1 línea en desktop, 2 líneas compactas en móvil */}
+        <div id="section-nav-bar" className={`mb-6 sm:mb-8 sticky top-16 z-40 bg-background/95 backdrop-blur-sm border-y border-border py-0.5 sm:py-4 -mx-4 px-4 transition-transform duration-300 ${
+          scrollDirection === 'down' && navBarPassed && !isNavigating && allowAutoHide ? '-translate-y-[calc(100%+4rem)]' : 'translate-y-0'
         }`}>
-          <nav className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6">
-            {navSections.map((section) => (
+          <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-0 md:gap-4 lg:gap-6">
+            {/* Primera fila */}
+            <a
+              href="#introducción"
+              className="text-primary hover:text-accent transition-colors font-medium text-xs sm:text-sm md:text-base flex items-center gap-1 touch-manipulation py-1"
+              onClick={handleNavClick('introducción')}
+            >
+              Introducción
+            </a>
+            <a
+              href="#argumento"
+              className="text-primary hover:text-accent transition-colors font-medium text-xs sm:text-sm md:text-base flex items-center gap-1 touch-manipulation py-1"
+              onClick={handleNavClick('argumento')}
+            >
+              Argumento
+            </a>
+            <a
+              href="#gameplay"
+              className="text-primary hover:text-accent transition-colors font-medium text-xs sm:text-sm md:text-base flex items-center gap-1 touch-manipulation py-1"
+              onClick={handleNavClick('gameplay')}
+            >
+              Gameplay
+            </a>
+            <a
+              href="#funciones"
+              className="text-primary hover:text-accent transition-colors font-medium text-xs sm:text-sm md:text-base flex items-center gap-1 touch-manipulation py-1"
+              onClick={handleNavClick('funciones')}
+            >
+              Funciones
+            </a>
+            
+            {/* Forzar salto de línea solo en móvil */}
+            <div className="basis-full h-0 md:hidden"></div>
+            
+            {/* Segunda fila */}
+            <a
+              href="#duración"
+              className="text-primary hover:text-accent transition-colors font-medium text-xs sm:text-sm md:text-base flex items-center gap-1 touch-manipulation py-1"
+              onClick={handleNavClick('duración')}
+            >
+              Duración
+            </a>
+            <a
+              href="#valoración-personal"
+              className="text-primary hover:text-accent transition-colors font-medium text-xs sm:text-sm md:text-base flex items-center gap-1 touch-manipulation py-1"
+              onClick={handleNavClick('valoración-personal')}
+            >
+              Valoración
+            </a>
+            {review?.imagenes && review.imagenes.length > 0 && (
               <a
-                key={section.title}
-                href={`#${section.title.toLowerCase().replace(/\s+/g, '-')}`}
-                className="text-primary hover:text-accent transition-colors font-medium text-xs sm:text-sm md:text-base flex items-center gap-1 touch-manipulation min-h-[44px] py-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const element = document.getElementById(section.title.toLowerCase().replace(/\s+/g, '-'));
-                  if (element) {
-                    // Obtener las barras sticky
-                    const header = document.querySelector('header');
-                    const navBar = document.getElementById('section-nav-bar');
-                    
-                    // Calcular altura total (header + navbar + pequeño margen)
-                    const headerHeight = header?.offsetHeight || 64;
-                    const navBarHeight = navBar?.offsetHeight || 0;
-                    const margin = 8; // Pequeño margen para que no quede pegado
-                    const totalOffset = headerHeight + navBarHeight + margin;
-                    
-                    // Scroll preciso al inicio del Card
-                    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-                    window.scrollTo({
-                      top: elementPosition - totalOffset,
-                      behavior: 'smooth'
-                    });
-                  }
-                }}
+                href="#galería"
+                className="text-primary hover:text-accent transition-colors font-medium text-xs sm:text-sm md:text-base flex items-center gap-1 touch-manipulation py-1"
+                onClick={handleNavClick('galería')}
               >
-                {section.title}
+                Galería
               </a>
-            ))}
+            )}
           </nav>
         </div>
 
